@@ -1,4 +1,4 @@
-package com.example.textrecognition;
+package com.akshayAshokCode.textrecognition;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -11,6 +11,8 @@ import android.widget.LinearLayout;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
+
+import com.akshayAshokCode.textrecognition.R;
 
 // Add image crop feature, Add copy button, add font identifying button
 public class MainActivity extends AppCompatActivity {

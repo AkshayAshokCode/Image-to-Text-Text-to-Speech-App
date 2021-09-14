@@ -1,4 +1,4 @@
-package com.example.textrecognition;
+package com.akshayAshokCode.textrecognition;
 
 import android.os.Bundle;
 
@@ -13,6 +13,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.SeekBar;
 import android.widget.Toast;
+
+import com.akshayAshokCode.textrecognition.R;
 
 import java.util.Locale;
 

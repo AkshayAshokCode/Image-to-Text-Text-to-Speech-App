@@ -1,4 +1,4 @@
-package com.example.textrecognition;
+package com.akshayAshokCode.textrecognition;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
@@ -24,6 +24,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.akshayAshokCode.textrecognition.R;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
@@ -147,7 +148,7 @@ public class recognitionFragment extends Fragment {
                 ClipboardManager clipboardManager= (ClipboardManager) getActivity().getSystemService(Context.CLIPBOARD_SERVICE);
                 ClipData clipData= ClipData.newPlainText("TextView",text.getText().toString());
                 clipboardManager.setPrimaryClip(clipData);
-                Toast.makeText(context, "Text Copied", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), "Text Copied", Toast.LENGTH_SHORT).show();
             }
         });
 
