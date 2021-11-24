@@ -1,9 +1,6 @@
 package com.akshayAshokCode.textrecognition;
 
 import android.os.Bundle;
-
-import androidx.fragment.app.Fragment;
-
 import android.speech.tts.TextToSpeech;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -14,7 +11,7 @@ import android.widget.EditText;
 import android.widget.SeekBar;
 import android.widget.Toast;
 
-import com.akshayAshokCode.textrecognition.R;
+import androidx.fragment.app.Fragment;
 
 import java.util.Locale;
 
@@ -122,5 +119,14 @@ public class SpeechFragment extends Fragment {
             textToSpeech.shutdown();
         }
         super.onDestroy();
+    }
+
+    @Override
+    public void onPause() {
+        if(textToSpeech!=null){
+            textToSpeech.stop();
+           // textToSpeech.shutdown();
+        }
+        super.onPause();
     }
 }
