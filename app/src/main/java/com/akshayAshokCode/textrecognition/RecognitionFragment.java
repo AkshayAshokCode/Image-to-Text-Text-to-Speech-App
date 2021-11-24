@@ -18,6 +18,7 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
 import android.provider.MediaStore;
+import android.speech.tts.TextToSpeech;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -29,6 +30,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.akshayAshokCode.textrecognition.util.TextToSpeechManager;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
@@ -41,53 +43,8 @@ import com.theartofdev.edmodo.cropper.CropImageView;
 
 import java.io.IOException;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link recognitionFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
-public class recognitionFragment extends Fragment {
+public class RecognitionFragment extends Fragment {
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-    private static final String TAG = "recognitionFragment";
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
-
-    public recognitionFragment() {
-        // Required empty public constructor
-    }
-
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment recognitionFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static recognitionFragment newInstance(String param1, String param2) {
-        recognitionFragment fragment = new recognitionFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
-    }
     ImageView imageView;
     Bitmap imageBitmap;
     Uri selectedImage;
@@ -95,7 +52,8 @@ public class recognitionFragment extends Fragment {
     Button copy;
     TextView text, heading;
     ProgressDialog progressDialog;
-    int op,x=0;
+    private static final String TAG = "RecognitionFragment";
+    int op, x = 0;
     static final int REQUEST_IMAGE_CAPTURE = 301;
     private AlphaAnimation buttonClick = new AlphaAnimation(1F, 0.5F);
     static final int REQUEST_GALLERY = 1;
@@ -109,17 +67,16 @@ public class recognitionFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View v= inflater.inflate(R.layout.fragment_recognition, container, false);
+        View v = inflater.inflate(R.layout.fragment_recognition, container, false);
         getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
-
-        imageView =v.findViewById(R.id.image);
-        text=v.findViewById(R.id.text);
-        heading=v.findViewById(R.id.heading);
-        copy=v.findViewById(R.id.copy);
+        imageView = v.findViewById(R.id.image);
+        text = v.findViewById(R.id.text);
+        heading = v.findViewById(R.id.heading);
+        copy = v.findViewById(R.id.copy);
         View gallery = v.findViewById(R.id.ln_gallery);
         View camera = v.findViewById(R.id.ln_camera);
         View detect = v.findViewById(R.id.ln_detect);
-        progressDialog=new ProgressDialog(getContext());
+        progressDialog = new ProgressDialog(getContext());
         // allowing permissions of gallery
         storagePermission = new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE};
         cameraPermission = new String[]{Manifest.permission.CAMERA};
@@ -147,22 +104,22 @@ public class recognitionFragment extends Fragment {
         detect.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(imageView.getVisibility()==View.VISIBLE) {
+                if (imageView.getVisibility() == View.VISIBLE) {
                     v.startAnimation(buttonClick);
                     progressDialog.setMessage("Processing Image...");
                     progressDialog.show();
                     text.setText("");
                     recognizeText();
-                    x=0;
-                }else
-                    Toast.makeText(getContext(),"No Image selected",Toast.LENGTH_SHORT).show();
+                    x = 0;
+                } else
+                    Toast.makeText(getContext(), "No Image selected", Toast.LENGTH_SHORT).show();
             }
         });
         copy.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ClipboardManager clipboardManager= (ClipboardManager) getActivity().getSystemService(Context.CLIPBOARD_SERVICE);
-                ClipData clipData= ClipData.newPlainText("TextView",text.getText().toString());
+                ClipboardManager clipboardManager = (ClipboardManager) getActivity().getSystemService(Context.CLIPBOARD_SERVICE);
+                ClipData clipData = ClipData.newPlainText("TextView", text.getText().toString());
                 clipboardManager.setPrimaryClip(clipData);
                 Toast.makeText(getContext(), "Text Copied", Toast.LENGTH_SHORT).show();
             }
@@ -171,45 +128,42 @@ public class recognitionFragment extends Fragment {
         return v;
     }
 
+    /*
+        @Override
+        public void onActivityResult(int requestCode, int resultCode, Intent data) {
+            text.setVisibility(View.GONE);
+            heading.setVisibility(View.GONE);
+            copy.setVisibility(View.GONE);
 
-
-
-/*
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        text.setVisibility(View.GONE);
-        heading.setVisibility(View.GONE);
-        copy.setVisibility(View.GONE);
-
-        super.onActivityResult(requestCode, resultCode, data);
-        switch (requestCode) {
-            case 0:   if (resultCode == Activity.RESULT_OK) {
-                Bundle extras = data.getExtras();
-                assert extras != null;
-                imageBitmap = (Bitmap) extras.get("data");
-                imageView.setImageBitmap(imageBitmap);
-                op=0;
-                imageView.setVisibility(View.VISIBLE);
-                imageView.requestFocus();
-            }
-                break;
-            case 1:
-                if(resultCode == Activity.RESULT_OK){
-                    selectedImage = data.getData();
-                    imageView.setImageURI(selectedImage);
-                    context = imageView.getContext();
+            super.onActivityResult(requestCode, resultCode, data);
+            switch (requestCode) {
+                case 0:   if (resultCode == Activity.RESULT_OK) {
+                    Bundle extras = data.getExtras();
+                    assert extras != null;
+                    imageBitmap = (Bitmap) extras.get("data");
+                    imageView.setImageBitmap(imageBitmap);
+                    op=0;
                     imageView.setVisibility(View.VISIBLE);
                     imageView.requestFocus();
-                    op = 1;
                 }
-                break;
-        }
+                    break;
+                case 1:
+                    if(resultCode == Activity.RESULT_OK){
+                        selectedImage = data.getData();
+                        imageView.setImageURI(selectedImage);
+                        context = imageView.getContext();
+                        imageView.setVisibility(View.VISIBLE);
+                        imageView.requestFocus();
+                        op = 1;
+                    }
+                    break;
+            }
 
-    }
-*/
+        }
+    */
     private void recognizeText() {
 
-        if(op==0) {
+        if (op == 0) {
             InputImage image = InputImage.fromBitmap(imageBitmap, 0);
             Task<Text> result =
                     recognizer.process(image)
@@ -225,10 +179,10 @@ public class recognitionFragment extends Fragment {
                                     new OnFailureListener() {
                                         @Override
                                         public void onFailure(@NonNull Exception e) {
-                                            Toast.makeText(getContext(),e.getMessage(),Toast.LENGTH_SHORT).show();
+                                            Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
                                         }
                                     });
-        }else {
+        } else {
             try {
                 InputImage image = InputImage.fromFilePath(context, selectedImage);
                 Task<Text> result =
@@ -245,7 +199,7 @@ public class recognitionFragment extends Fragment {
                                         new OnFailureListener() {
                                             @Override
                                             public void onFailure(@NonNull Exception e) {
-                                                Toast.makeText(getContext(),e.getMessage(),Toast.LENGTH_SHORT).show();
+                                                Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
                                             }
                                         });
             } catch (IOException e) {
@@ -258,17 +212,17 @@ public class recognitionFragment extends Fragment {
     private void processTextBlock(Text result) {
         progressDialog.dismiss();
         String resultText = result.getText();
-        if(resultText!=null){
+        if (resultText != null) {
             text.setVisibility(View.VISIBLE);
             heading.setVisibility(View.VISIBLE);
             copy.setVisibility(View.VISIBLE);
             for (Text.TextBlock block : result.getTextBlocks()) {
                 String blockText = block.getText();
-                text.append(blockText +"\n");
+                text.append(blockText + "\n");
             }
             copy.requestFocus();
-        }else
-            Toast.makeText(getContext(),"No Text",Toast.LENGTH_SHORT).show();
+        } else
+            Toast.makeText(getContext(), "No Text", Toast.LENGTH_SHORT).show();
     }
 
     private void checkGalleryPermission() {
@@ -278,6 +232,7 @@ public class recognitionFragment extends Fragment {
             pickImageFromGallery();
         }
     }
+
     private void checkCameraPermission() {
         if (!checkUserCameraPermission()) {
             requestCameraPermission();
@@ -285,6 +240,7 @@ public class recognitionFragment extends Fragment {
             clickFromCamera();
         }
     }
+
     // checking storage permissions
     private Boolean checkStoragePermission() {
         return ContextCompat.checkSelfPermission(getContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE) == (PackageManager.PERMISSION_GRANTED);
@@ -299,6 +255,7 @@ public class recognitionFragment extends Fragment {
     private void requestStoragePermission() {
         requestPermissions(storagePermission, STORAGE_REQUEST);
     }
+
     // Requesting camera permission
     private void requestCameraPermission() {
         requestPermissions(storagePermission, CAMERA_REQUEST);
@@ -324,11 +281,11 @@ public class recognitionFragment extends Fragment {
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable @org.jetbrains.annotations.Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        Log.d(TAG,"RequestCode:"+requestCode);
+        Log.d(TAG, "RequestCode:" + requestCode);
         switch (requestCode) {
             case IMAGEPICK_GALLERY_REQUEST: {
-               // getActivity();
-                op=0;
+                // getActivity();
+                op = 0;
                 if (resultCode == Activity.RESULT_OK && data != null) {
                     Uri uri = data.getData();
                     launchImageCrop(uri);
@@ -339,8 +296,8 @@ public class recognitionFragment extends Fragment {
             }
             break;
             case REQUEST_IMAGE_CAPTURE: {
-                op=1;
-                if (resultCode ==Activity.RESULT_OK && data != null) {
+                op = 1;
+                if (resultCode == Activity.RESULT_OK && data != null) {
                     Uri uri = data.getData();
                     launchImageCrop(uri);
                 } else {
@@ -371,6 +328,7 @@ public class recognitionFragment extends Fragment {
             }
         }
     }
+
     // Requesting gallery
     // permission if not given
     @Override
@@ -384,7 +342,7 @@ public class recognitionFragment extends Fragment {
                     Toast.makeText(getContext(), "Please Enable Storage Permissions", Toast.LENGTH_LONG).show();
                 }
             }
-        }else if(requestCode == CAMERA_REQUEST){
+        } else if (requestCode == CAMERA_REQUEST) {
             if (grantResults.length > 0) {
                 boolean cameraAccessAccepted = grantResults[0] == PackageManager.PERMISSION_GRANTED;
                 if (cameraAccessAccepted) {
