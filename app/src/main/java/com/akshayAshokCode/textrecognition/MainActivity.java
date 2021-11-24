@@ -10,6 +10,7 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentManager;
 
 import com.akshayAshokCode.textrecognition.R;
@@ -26,6 +27,14 @@ public class MainActivity extends AppCompatActivity {
           speech=findViewById(R.id.speech);
           layout=findViewById(R.id.frame);
 
+            text.setBackground(ContextCompat.getDrawable(this,R.drawable.button));
+            text.setTextColor(Color.WHITE);
+            FragmentManager fragmentManager = getSupportFragmentManager();
+            if (fragmentManager.findFragmentByTag("TEXT")!= null) {
+                fragmentManager.beginTransaction().show(fragmentManager.findFragmentByTag("TEXT")).commit();
+            } else{
+                fragmentManager.beginTransaction().add(R.id.frame, new recognitionFragment(), "TEXT").commit();
+            }
           text.setOnClickListener(new View.OnClickListener() {
               @SuppressLint("UseCompatLoadingForDrawables")
               @Override
@@ -35,7 +44,7 @@ public class MainActivity extends AppCompatActivity {
                   imm.hideSoftInputFromWindow(layout.getWindowToken(), 0);
                   speech.setBackground(getDrawable(R.drawable.edittext_shape));
                   speech.setTextColor(Color.BLACK);
-                  text.setBackground(getDrawable(R.drawable.button));
+                  text.setBackground(ContextCompat.getDrawable(MainActivity.this,R.drawable.button));
                   text.setTextColor(Color.WHITE);
                   FragmentManager fragmentManager = getSupportFragmentManager();
                   if (fragmentManager.findFragmentByTag("TEXT")!= null) {
