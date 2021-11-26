@@ -2,8 +2,11 @@ package com.akshayAshokCode.textrecognition;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.speech.tts.TextToSpeech;
+import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
@@ -19,7 +22,7 @@ public class MainActivity extends AppCompatActivity {
     Button text, speech;
     FrameLayout layout;
     FragmentManager fragmentManager;
-
+    private static final String TAG = "MainActivity";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -32,7 +35,6 @@ public class MainActivity extends AppCompatActivity {
         text.setTextColor(Color.WHITE);
         fragmentManager = getSupportFragmentManager();
         fragmentManager.beginTransaction().add(R.id.frame, new RecognitionFragment(), "TEXT").commit();
-
         text.setOnClickListener(new View.OnClickListener() {
             @SuppressLint("UseCompatLoadingForDrawables")
             @Override
