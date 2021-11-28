@@ -64,9 +64,15 @@ public class MainActivity extends AppCompatActivity {
                 speech.setTextColor(Color.BLACK);
                 text.setBackground(ContextCompat.getDrawable(MainActivity.this, R.drawable.button));
                 text.setTextColor(Color.WHITE);
-               // fragmentManager = getSupportFragmentManager();
+                if (fragmentManager.findFragmentByTag("TEXT")!= null) {
+                    fragmentManager.beginTransaction().show(fragmentManager.findFragmentByTag("TEXT")).commit();
+                } else{
+                    fragmentManager.beginTransaction().add(R.id.frame, new RecognitionFragment(), "TEXT").commit();
+                }if(fragmentManager.findFragmentByTag("SPEECH")!=null) {
+                    fragmentManager.beginTransaction().hide(fragmentManager.findFragmentByTag("SPEECH")).commit();
+                  //  fragmentManager.
 
-                    fragmentManager.beginTransaction().replace(R.id.frame, new RecognitionFragment(), "TEXT").commit();
+                }
 
             }
         });
@@ -78,8 +84,14 @@ public class MainActivity extends AppCompatActivity {
                 text.setTextColor(Color.BLACK);
                 speech.setBackground(getDrawable(R.drawable.button));
                 speech.setTextColor(Color.WHITE);
-                    fragmentManager.beginTransaction().replace(R.id.frame, new SpeechFragment(), "SPEECH").commit();
-
+                if(fragmentManager.findFragmentByTag("SPEECH")!=null) {
+                    fragmentManager.beginTransaction().show(fragmentManager.findFragmentByTag("SPEECH")).commit();
+                }else{
+                    fragmentManager.beginTransaction().add(R.id.frame, new SpeechFragment(), "SPEECH").commit();
+                }
+                if(fragmentManager.findFragmentByTag("TEXT")!=null){
+                    fragmentManager.beginTransaction().hide(fragmentManager.findFragmentByTag("TEXT")).commit();
+                }
             }
         });
     }

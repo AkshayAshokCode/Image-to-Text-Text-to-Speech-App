@@ -53,7 +53,6 @@ public class SpeechFragment extends Fragment {
                 final Locale selectedLanguage = languageTypeSelected.getLocale();
                 if(textToSpeech!=null){
                     textToSpeech.stop();
-                    textToSpeech.shutdown();
                 }
                 textToSpeech = new TextToSpeechManager().textToSpeech(getContext(), selectedLanguage);
 
@@ -104,11 +103,20 @@ public class SpeechFragment extends Fragment {
         super.onDestroy();
     }
 
+
     @Override
     public void onPause() {
         if (textToSpeech != null) {
             textToSpeech.stop();
         }
         super.onPause();
+    }
+
+    @Override
+    public void onHiddenChanged(boolean hidden) {
+        super.onHiddenChanged(hidden);
+        if(hidden && textToSpeech != null){
+            textToSpeech.stop();
+        }
     }
 }
