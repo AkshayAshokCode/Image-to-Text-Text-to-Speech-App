@@ -81,47 +81,36 @@ public class RecognitionFragment extends Fragment {
         View camera = v.findViewById(R.id.ln_camera);
         LinearLayout detect = v.findViewById(R.id.ln_detect);
         progressDialog = new ProgressDialog(getContext());
+
         // allowing permissions of gallery
         storagePermission = new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE};
         cameraPermission = new String[]{Manifest.permission.CAMERA};
 
-        camera.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                v.startAnimation(buttonClick);
+        camera.setOnClickListener(v14 -> {
+            v14.startAnimation(buttonClick);
+            text.setText("");
+            checkCameraPermission();
+        });
+        gallery.setOnClickListener(v13 -> {
+            v13.startAnimation(buttonClick);
+            text.setText("");
+            checkGalleryPermission();
+        });
+        detect.setOnClickListener(v12 -> {
+            if (imageView.getVisibility() == View.VISIBLE) {
+                v12.startAnimation(buttonClick);
+                progressDialog.setMessage("Processing Image...");
+                progressDialog.show();
                 text.setText("");
-                checkCameraPermission();
-            }
+                recognizeText();
+            } else
+                Toast.makeText(getContext(), "No Image selected", Toast.LENGTH_SHORT).show();
         });
-        gallery.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                v.startAnimation(buttonClick);
-                text.setText("");
-                checkGalleryPermission();
-            }
-        });
-        detect.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (imageView.getVisibility() == View.VISIBLE) {
-                    v.startAnimation(buttonClick);
-                    progressDialog.setMessage("Processing Image...");
-                    progressDialog.show();
-                    text.setText("");
-                    recognizeText();
-                } else
-                    Toast.makeText(getContext(), "No Image selected", Toast.LENGTH_SHORT).show();
-            }
-        });
-        copy.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                ClipboardManager clipboardManager = (ClipboardManager) getActivity().getSystemService(Context.CLIPBOARD_SERVICE);
-                ClipData clipData = ClipData.newPlainText("TextView", text.getText().toString());
-                clipboardManager.setPrimaryClip(clipData);
-                Toast.makeText(getContext(), "Text Copied", Toast.LENGTH_SHORT).show();
-            }
+        copy.setOnClickListener(v1 -> {
+            ClipboardManager clipboardManager = (ClipboardManager) getActivity().getSystemService(Context.CLIPBOARD_SERVICE);
+            ClipData clipData = ClipData.newPlainText("TextView", text.getText().toString());
+            clipboardManager.setPrimaryClip(clipData);
+            Toast.makeText(getContext(), "Text Copied", Toast.LENGTH_SHORT).show();
         });
 
         return v;
