@@ -1,9 +1,8 @@
-package com.akshayAshokCode.textrecognition;
+package com.akshayAshokCode.textrecognition.presentation;
 
 import android.media.AudioManager;
 import android.os.Bundle;
 import android.speech.tts.TextToSpeech;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,15 +11,16 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.SeekBar;
-import android.widget.Toast;
 
 import androidx.appcompat.widget.AppCompatSpinner;
 import androidx.fragment.app.Fragment;
 
+import com.akshayAshokCode.textrecognition.R;
 import com.akshayAshokCode.textrecognition.data.LanguageData;
 import com.akshayAshokCode.textrecognition.model.LanguageType;
 import com.akshayAshokCode.textrecognition.util.PitchAndSpeedManager;
 import com.akshayAshokCode.textrecognition.util.TextToSpeechManager;
+import com.google.android.material.snackbar.Snackbar;
 
 import java.util.HashMap;
 import java.util.Locale;
@@ -42,16 +42,16 @@ public class SpeechFragment extends Fragment {
         mPitch = v.findViewById(R.id.pitch);
         mText = v.findViewById(R.id.text);
         stop = v.findViewById(R.id.stop);
-        spinner=v.findViewById(R.id.spinner);
-        LanguageType[] languageTypes= new LanguageData().getLanguageData();
-        ArrayAdapter<LanguageType> adapter=new ArrayAdapter<LanguageType>(getContext(),R.layout.support_simple_spinner_dropdown_item,languageTypes);
+        spinner = v.findViewById(R.id.spinner);
+        LanguageType[] languageTypes = new LanguageData().getLanguageData();
+        ArrayAdapter<LanguageType> adapter = new ArrayAdapter<LanguageType>(getContext(), R.layout.support_simple_spinner_dropdown_item, languageTypes);
         spinner.setAdapter(adapter);
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                LanguageType languageTypeSelected=adapter.getItem(i);
+                LanguageType languageTypeSelected = adapter.getItem(i);
                 final Locale selectedLanguage = languageTypeSelected.getLocale();
-                if(textToSpeech!=null){
+                if (textToSpeech != null) {
                     textToSpeech.stop();
                 }
                 textToSpeech = new TextToSpeechManager().textToSpeech(getContext(), selectedLanguage);
@@ -65,7 +65,7 @@ public class SpeechFragment extends Fragment {
         });
         talk.setOnClickListener(v1 -> {
             if (mText.getText().toString().equals("")) {
-                Toast.makeText(getContext(), "No Text Entered", Toast.LENGTH_SHORT).show();
+                Snackbar.make(talk, "No Text Entered", Snackbar.LENGTH_SHORT).show();
             } else
                 speak();
         });
@@ -90,8 +90,8 @@ public class SpeechFragment extends Fragment {
         textToSpeech.setPitch(pitch);
         textToSpeech.setSpeechRate(speed);
         //textToSpeech.speak(text, TextToSpeech.QUEUE_FLUSH, myHashAlarm);
-       // CharSequence charText=text;
-        textToSpeech.speak(text,TextToSpeech.QUEUE_FLUSH,null,TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID);
+        // CharSequence charText=text;
+        textToSpeech.speak(text, TextToSpeech.QUEUE_FLUSH, null, TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID);
     }
 
     @Override
@@ -115,7 +115,7 @@ public class SpeechFragment extends Fragment {
     @Override
     public void onHiddenChanged(boolean hidden) {
         super.onHiddenChanged(hidden);
-        if(hidden && textToSpeech != null){
+        if (hidden && textToSpeech != null) {
             textToSpeech.stop();
         }
     }
