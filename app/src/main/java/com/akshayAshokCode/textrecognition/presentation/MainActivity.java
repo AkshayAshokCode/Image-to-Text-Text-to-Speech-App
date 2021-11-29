@@ -1,25 +1,21 @@
-package com.akshayAshokCode.textrecognition;
+package com.akshayAshokCode.textrecognition.presentation;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentSender;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.speech.tts.TextToSpeech;
 import android.util.Log;
-import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.FrameLayout;
-import android.widget.LinearLayout;
-import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentManager;
 
+import com.akshayAshokCode.textrecognition.R;
 import com.google.android.play.core.appupdate.AppUpdateInfo;
 import com.google.android.play.core.appupdate.AppUpdateManager;
 import com.google.android.play.core.appupdate.AppUpdateManagerFactory;
@@ -48,50 +44,41 @@ public class MainActivity extends AppCompatActivity {
         text = findViewById(R.id.text);
         speech = findViewById(R.id.speech);
         layout = findViewById(R.id.frame);
-
         text.setBackground(ContextCompat.getDrawable(this, R.drawable.button));
         text.setTextColor(Color.WHITE);
         fragmentManager = getSupportFragmentManager();
         fragmentManager.beginTransaction().add(R.id.frame, new RecognitionFragment(), "TEXT").commit();
-        text.setOnClickListener(new View.OnClickListener() {
-            @SuppressLint("UseCompatLoadingForDrawables")
-            @Override
-            public void onClick(View v) {
-                InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-                assert imm != null;
-                imm.hideSoftInputFromWindow(layout.getWindowToken(), 0);
-                speech.setBackground(getDrawable(R.drawable.edittext_shape));
-                speech.setTextColor(Color.BLACK);
-                text.setBackground(ContextCompat.getDrawable(MainActivity.this, R.drawable.button));
-                text.setTextColor(Color.WHITE);
-                if (fragmentManager.findFragmentByTag("TEXT")!= null) {
-                    fragmentManager.beginTransaction().show(fragmentManager.findFragmentByTag("TEXT")).commit();
-                } else{
-                    fragmentManager.beginTransaction().add(R.id.frame, new RecognitionFragment(), "TEXT").commit();
-                }if(fragmentManager.findFragmentByTag("SPEECH")!=null) {
-                    fragmentManager.beginTransaction().hide(fragmentManager.findFragmentByTag("SPEECH")).commit();
-                  //  fragmentManager.
 
-                }
+        text.setOnClickListener(v -> {
+            InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+            assert imm != null;
+            imm.hideSoftInputFromWindow(layout.getWindowToken(), 0);
+            speech.setBackground(getDrawable(R.drawable.edittext_shape));
+            speech.setTextColor(Color.BLACK);
+            text.setBackground(ContextCompat.getDrawable(MainActivity.this, R.drawable.button));
+            text.setTextColor(Color.WHITE);
+            if (fragmentManager.findFragmentByTag("TEXT")!= null) {
+                fragmentManager.beginTransaction().show(fragmentManager.findFragmentByTag("TEXT")).commit();
+            } else{
+                fragmentManager.beginTransaction().add(R.id.frame, new RecognitionFragment(), "TEXT").commit();
+            }if(fragmentManager.findFragmentByTag("SPEECH")!=null) {
+                fragmentManager.beginTransaction().hide(fragmentManager.findFragmentByTag("SPEECH")).commit();
 
             }
+
         });
-        speech.setOnClickListener(new View.OnClickListener() {
-            @SuppressLint("UseCompatLoadingForDrawables")
-            @Override
-            public void onClick(View v) {
-                text.setBackground(getDrawable(R.drawable.edittext_shape));
-                text.setTextColor(Color.BLACK);
-                speech.setBackground(getDrawable(R.drawable.button));
-                speech.setTextColor(Color.WHITE);
-                if(fragmentManager.findFragmentByTag("SPEECH")!=null) {
-                    fragmentManager.beginTransaction().show(fragmentManager.findFragmentByTag("SPEECH")).commit();
-                }else{
-                    fragmentManager.beginTransaction().add(R.id.frame, new SpeechFragment(), "SPEECH").commit();
-                }
-                if(fragmentManager.findFragmentByTag("TEXT")!=null){
-                    fragmentManager.beginTransaction().hide(fragmentManager.findFragmentByTag("TEXT")).commit();
-                }
+        speech.setOnClickListener(v -> {
+            text.setBackground(getDrawable(R.drawable.edittext_shape));
+            text.setTextColor(Color.BLACK);
+            speech.setBackground(getDrawable(R.drawable.button));
+            speech.setTextColor(Color.WHITE);
+            if(fragmentManager.findFragmentByTag("SPEECH")!=null) {
+                fragmentManager.beginTransaction().show(fragmentManager.findFragmentByTag("SPEECH")).commit();
+            }else{
+                fragmentManager.beginTransaction().add(R.id.frame, new SpeechFragment(), "SPEECH").commit();
+            }
+            if(fragmentManager.findFragmentByTag("TEXT")!=null){
+                fragmentManager.beginTransaction().hide(fragmentManager.findFragmentByTag("TEXT")).commit();
             }
         });
     }

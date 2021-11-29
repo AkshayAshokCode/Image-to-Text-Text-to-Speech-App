@@ -4,10 +4,10 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:background="#ffffff"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="com.akshayAshokCode.textrecognition.MainActivity">
+    android:background="@color/colorPrimary"
+    tools:context="com.akshayAshokCode.textrecognition.presentation.MainActivity">
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -15,21 +15,23 @@
         android:layout_marginTop="20dp"
         android:layout_marginBottom="20dp"
         android:orientation="horizontal">
-        <Button
+        <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/text"
             android:layout_width="wrap_content"
             android:padding="10dp"
             android:background="@drawable/edittext_shape"
             android:elevation="20dp"
+            android:textColor="@color/textColor"
             android:layout_height="wrap_content"
             android:text="Recognize Text"/>
         <View
             android:layout_width="20dp"
             android:layout_height="20dp"/>
-        <Button
+        <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/speech"
             android:padding="10dp"
             android:layout_width="wrap_content"
+            android:textColor="@color/textColor"
             android:background="@drawable/edittext_shape"
             android:layout_height="wrap_content"
             android:text="Text to Speech"/>
