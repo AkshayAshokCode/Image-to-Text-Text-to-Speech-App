@@ -14,5 +14,5 @@ Use Google Machine Learning SDK to extract text from an image for text recogniti
 <a><img src="https://github.com/AkshayAshokCode/Image-to-Text-Text-to-Speech-App/blob/master/screenshots/screenshot3.png" height="500"></a> &nbsp;&nbsp;&nbsp;&nbsp;
 <a><img src="https://github.com/AkshayAshokCode/Image-to-Text-Text-to-Speech-App/blob/master/screenshots/screenshot4.png" height="500"></a> &nbsp;&nbsp;&nbsp;&nbsp;
 <a><img src="https://github.com/AkshayAshokCode/Image-to-Text-Text-to-Speech-App/blob/master/screenshots/screenshot5.png" height="500"></a> &nbsp;&nbsp;&nbsp;&nbsp;
-<a><img src="https://github.com/AkshayAshokCode/Image-to-Text-Text-to-Speech-App/blob/master/screenshots/screenshot6.png" height="500"></a> &nbsp;&nbsp;&nbsp;&nbsp;
+<a><img src="https://github.com/AkshayAshokCode/Image-to-Text-Text-to-Speech-App/blob/master/screenshots/screenshot6.png" height="500"></a>
 
