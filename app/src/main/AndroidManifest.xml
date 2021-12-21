@@ -12,12 +12,12 @@
     </queries>
     <application
         android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@drawable/image_to_text_app_icon"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name="com.akshayAshokCode.textrecognition.MainActivity"
+        <activity android:name="com.akshayAshokCode.textrecognition.presentation.MainActivity"
             android:screenOrientation="portrait"
             android:exported="true">
             <intent-filter>

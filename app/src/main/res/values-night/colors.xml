@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#FF202020</color>
+    <color name="colorPrimaryReverse">#ffffff</color>
+    <color name="colorPrimaryDark">#000000</color>
+    <color name="colorAccent">#03DAC5</color>
+    <color name="buttonBlue">@android:color/holo_blue_light</color>
+    <color name="textColor">#FF202020</color>
+    <!-- colors for tabs-->
+    <color name="textColorForTabs">#ffffff</color>
+</resources>

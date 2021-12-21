@@ -1,42 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:background="#ffffff"
     android:layout_height="match_parent"
+    android:background="@color/colorPrimary"
     android:orientation="vertical"
-    tools:context="com.akshayAshokCode.textrecognition.MainActivity">
-    <LinearLayout
+    tools:context="com.akshayAshokCode.textrecognition.presentation.MainActivity">
+
+    <com.google.android.material.tabs.TabLayout
+        android:id="@+id/tab_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center_horizontal"
-        android:layout_marginTop="20dp"
-        android:layout_marginBottom="20dp"
-        android:orientation="horizontal">
-        <Button
-            android:id="@+id/text"
-            android:layout_width="wrap_content"
-            android:padding="10dp"
-            android:background="@drawable/edittext_shape"
-            android:elevation="20dp"
-            android:layout_height="wrap_content"
-            android:text="Recognize Text"/>
-        <View
-            android:layout_width="20dp"
-            android:layout_height="20dp"/>
-        <Button
-            android:id="@+id/speech"
-            android:padding="10dp"
-            android:layout_width="wrap_content"
-            android:background="@drawable/edittext_shape"
-            android:layout_height="wrap_content"
-            android:text="Text to Speech"/>
-    </LinearLayout>
-    <FrameLayout
-        android:id="@+id/frame"
+        app:tabIndicatorColor="@color/textColorForTabs"
+        app:tabSelectedTextColor="@color/textColorForTabs"
+        app:tabTextColor="@color/textColorForTabs"/>
+
+    <androidx.viewpager2.widget.ViewPager2
+        android:id="@+id/pager"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent" />
+
 
 </LinearLayout>

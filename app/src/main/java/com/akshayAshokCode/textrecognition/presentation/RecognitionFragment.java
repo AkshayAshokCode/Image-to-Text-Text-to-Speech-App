@@ -1,4 +1,4 @@
-package com.akshayAshokCode.textrecognition;
+package com.akshayAshokCode.textrecognition.presentation;
 
 import android.Manifest;
 import android.app.Activity;
@@ -11,16 +11,8 @@ import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.core.content.ContextCompat;
-import androidx.core.content.FileProvider;
-import androidx.fragment.app.Fragment;
-
 import android.os.Environment;
 import android.provider.MediaStore;
-import android.speech.tts.TextToSpeech;
 import android.text.format.DateFormat;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -32,12 +24,16 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.akshayAshokCode.textrecognition.util.TextToSpeechManager;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
+import androidx.core.content.FileProvider;
+import androidx.fragment.app.Fragment;
+
+import com.akshayAshokCode.textrecognition.R;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.mlkit.vision.common.InputImage;
 import com.google.mlkit.vision.text.Text;
 import com.google.mlkit.vision.text.TextRecognition;
@@ -66,6 +62,7 @@ public class RecognitionFragment extends Fragment {
     private static final int IMAGEPICK_GALLERY_REQUEST = 300;
     String[] storagePermission, cameraPermission;
     TextRecognizer recognizer = TextRecognition.getClient();
+    LinearLayout camera, gallery, detect;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -77,51 +74,40 @@ public class RecognitionFragment extends Fragment {
         text = v.findViewById(R.id.text);
         heading = v.findViewById(R.id.heading);
         copy = v.findViewById(R.id.copy);
-        View gallery = v.findViewById(R.id.ln_gallery);
-        View camera = v.findViewById(R.id.ln_camera);
-        LinearLayout detect = v.findViewById(R.id.ln_detect);
+        camera = v.findViewById(R.id.ln_camera);
+        gallery = v.findViewById(R.id.ln_gallery);
+        detect = v.findViewById(R.id.ln_detect);
         progressDialog = new ProgressDialog(getContext());
+
         // allowing permissions of gallery
         storagePermission = new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE};
         cameraPermission = new String[]{Manifest.permission.CAMERA};
 
-        camera.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                v.startAnimation(buttonClick);
+        camera.setOnClickListener(v14 -> {
+            v14.startAnimation(buttonClick);
+            text.setText("");
+            checkCameraPermission();
+        });
+        gallery.setOnClickListener(v13 -> {
+            v13.startAnimation(buttonClick);
+            text.setText("");
+            checkGalleryPermission();
+        });
+        detect.setOnClickListener(v12 -> {
+            if (imageView.getVisibility() == View.VISIBLE) {
+                v12.startAnimation(buttonClick);
+                progressDialog.setMessage("Processing Image...");
+                progressDialog.show();
                 text.setText("");
-                checkCameraPermission();
-            }
+                recognizeText();
+            } else
+                Snackbar.make(gallery, "No image selected", Snackbar.LENGTH_SHORT).show();
         });
-        gallery.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                v.startAnimation(buttonClick);
-                text.setText("");
-                checkGalleryPermission();
-            }
-        });
-        detect.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (imageView.getVisibility() == View.VISIBLE) {
-                    v.startAnimation(buttonClick);
-                    progressDialog.setMessage("Processing Image...");
-                    progressDialog.show();
-                    text.setText("");
-                    recognizeText();
-                } else
-                    Toast.makeText(getContext(), "No Image selected", Toast.LENGTH_SHORT).show();
-            }
-        });
-        copy.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                ClipboardManager clipboardManager = (ClipboardManager) getActivity().getSystemService(Context.CLIPBOARD_SERVICE);
-                ClipData clipData = ClipData.newPlainText("TextView", text.getText().toString());
-                clipboardManager.setPrimaryClip(clipData);
-                Toast.makeText(getContext(), "Text Copied", Toast.LENGTH_SHORT).show();
-            }
+        copy.setOnClickListener(v1 -> {
+            ClipboardManager clipboardManager = (ClipboardManager) getActivity().getSystemService(Context.CLIPBOARD_SERVICE);
+            ClipData clipData = ClipData.newPlainText("TextView", text.getText().toString());
+            clipboardManager.setPrimaryClip(clipData);
+            Snackbar.make(copy, "Text copied", Snackbar.LENGTH_SHORT).show();
         });
 
         return v;
@@ -132,20 +118,10 @@ public class RecognitionFragment extends Fragment {
         InputImage image = InputImage.fromBitmap(imageBitmap, 0);
         Task<Text> result =
                 recognizer.process(image)
-                        .addOnSuccessListener(new OnSuccessListener<Text>() {
-                            @Override
-                            public void onSuccess(Text visionText) {
-
-                                processTextBlock(visionText);
-
-                            }
-                        })
+                        .addOnSuccessListener(visionText -> processTextBlock(visionText))
                         .addOnFailureListener(
-                                new OnFailureListener() {
-                                    @Override
-                                    public void onFailure(@NonNull Exception e) {
-                                        Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
-                                    }
+                                e -> {
+                                    Log.e(TAG, e.getMessage());
                                 });
     }
 
@@ -162,7 +138,7 @@ public class RecognitionFragment extends Fragment {
             }
             copy.requestFocus();
         } else
-            Toast.makeText(getContext(), "No Text", Toast.LENGTH_SHORT).show();
+            Snackbar.make(gallery, "No text", Snackbar.LENGTH_SHORT).show();
     }
 
     private void checkGalleryPermission() {
@@ -293,7 +269,7 @@ public class RecognitionFragment extends Fragment {
                 if (writeStorageAccepted) {
                     pickImageFromGallery();
                 } else {
-                    Toast.makeText(getContext(), "Please Enable Storage Permissions", Toast.LENGTH_LONG).show();
+                    Snackbar.make(gallery, "Please Enable Storage Permissions", Snackbar.LENGTH_SHORT).show();
                 }
             }
         } else if (requestCode == CAMERA_REQUEST) {
@@ -302,7 +278,7 @@ public class RecognitionFragment extends Fragment {
                 if (cameraAccessAccepted) {
                     clickFromCamera();
                 } else {
-                    Toast.makeText(getContext(), "Please Enable Camera Permissions", Toast.LENGTH_LONG).show();
+                    Snackbar.make(gallery, "Please Enable Camera Permissions", Snackbar.LENGTH_SHORT).show();
                 }
             }
         }
