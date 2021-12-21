@@ -14,8 +14,12 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentPagerAdapter;
+import androidx.viewpager2.widget.ViewPager2;
 
 import com.akshayAshokCode.textrecognition.R;
+import com.akshayAshokCode.textrecognition.presentation.adapter.FragmentAdapter;
+import com.google.android.material.tabs.TabLayout;
 import com.google.android.play.core.appupdate.AppUpdateInfo;
 import com.google.android.play.core.appupdate.AppUpdateManager;
 import com.google.android.play.core.appupdate.AppUpdateManagerFactory;
@@ -25,11 +29,12 @@ import com.google.android.play.core.tasks.Task;
 
 // Add image crop feature, Add copy button, add font identifying button
 public class MainActivity extends AppCompatActivity {
-    Button text, speech;
-    FrameLayout layout;
     FragmentManager fragmentManager;
     private static final String TAG = "MainActivity";
-    private final int REQUEST_CODE=11;
+    private final int REQUEST_CODE = 11;
+    ViewPager2 viewPager;
+    TabLayout tabLayout;
+    FragmentAdapter fragmentAdapter;
 
     @Override
     protected void onStart() {
@@ -41,48 +46,43 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        text = findViewById(R.id.text);
-        speech = findViewById(R.id.speech);
-        layout = findViewById(R.id.frame);
-        text.setBackground(ContextCompat.getDrawable(this, R.drawable.button));
-        text.setTextColor(Color.WHITE);
+
+        viewPager = findViewById(R.id.pager);
+        tabLayout = findViewById(R.id.tab_layout);
         fragmentManager = getSupportFragmentManager();
-        fragmentManager.beginTransaction().add(R.id.frame, new RecognitionFragment(), "TEXT").commit();
+        fragmentAdapter = new FragmentAdapter(fragmentManager, getLifecycle());
+        viewPager.setAdapter(fragmentAdapter);
 
-        text.setOnClickListener(v -> {
-            InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-            assert imm != null;
-            imm.hideSoftInputFromWindow(layout.getWindowToken(), 0);
-            speech.setBackground(getDrawable(R.drawable.edittext_shape));
-            speech.setTextColor(Color.BLACK);
-            text.setBackground(ContextCompat.getDrawable(MainActivity.this, R.drawable.button));
-            text.setTextColor(Color.WHITE);
-            if (fragmentManager.findFragmentByTag("TEXT")!= null) {
-                fragmentManager.beginTransaction().show(fragmentManager.findFragmentByTag("TEXT")).commit();
-            } else{
-                fragmentManager.beginTransaction().add(R.id.frame, new RecognitionFragment(), "TEXT").commit();
-            }if(fragmentManager.findFragmentByTag("SPEECH")!=null) {
-                fragmentManager.beginTransaction().hide(fragmentManager.findFragmentByTag("SPEECH")).commit();
+        tabLayout.addTab(tabLayout.newTab().setText("Recognize Text"));
+        tabLayout.addTab(tabLayout.newTab().setText("Text to Speech"));
+
+        tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+                viewPager.setCurrentItem(tab.getPosition());
+            }
+
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
 
             }
 
-        });
-        speech.setOnClickListener(v -> {
-            text.setBackground(getDrawable(R.drawable.edittext_shape));
-            text.setTextColor(Color.BLACK);
-            speech.setBackground(getDrawable(R.drawable.button));
-            speech.setTextColor(Color.WHITE);
-            if(fragmentManager.findFragmentByTag("SPEECH")!=null) {
-                fragmentManager.beginTransaction().show(fragmentManager.findFragmentByTag("SPEECH")).commit();
-            }else{
-                fragmentManager.beginTransaction().add(R.id.frame, new SpeechFragment(), "SPEECH").commit();
-            }
-            if(fragmentManager.findFragmentByTag("TEXT")!=null){
-                fragmentManager.beginTransaction().hide(fragmentManager.findFragmentByTag("TEXT")).commit();
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+
             }
         });
+
+        viewPager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
+            @Override
+            public void onPageSelected(int position) {
+                tabLayout.selectTab(tabLayout.getTabAt(position));
+            }
+        });
+
     }
-    private void checkUpdate(){
+
+    private void checkUpdate() {
         AppUpdateManager appUpdateManager = AppUpdateManagerFactory.create(this);
 
 // Returns an intent object that you use to check for an update.
@@ -96,20 +96,21 @@ public class MainActivity extends AppCompatActivity {
                     && appUpdateInfo.isUpdateTypeAllowed(AppUpdateType.IMMEDIATE)) {
                 // Request the update.
                 try {
-                    appUpdateManager.startUpdateFlowForResult(appUpdateInfo,AppUpdateType.IMMEDIATE,this,REQUEST_CODE);
+                    appUpdateManager.startUpdateFlowForResult(appUpdateInfo, AppUpdateType.IMMEDIATE, this, REQUEST_CODE);
                 } catch (IntentSender.SendIntentException e) {
                     e.printStackTrace();
                 }
             }
         });
     }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode==REQUEST_CODE){
+        if (requestCode == REQUEST_CODE) {
             Log.d(TAG, "onActivityResult: Updated to Latest Features");
-            if(resultCode!=RESULT_OK){
-                Log.e(TAG,"Update Failed, please Go to Google Play Store & update.");
+            if (resultCode != RESULT_OK) {
+                Log.e(TAG, "Update Failed, please Go to Google Play Store & update.");
             }
         }
     }
