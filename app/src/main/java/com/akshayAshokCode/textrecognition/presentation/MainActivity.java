@@ -18,6 +18,7 @@ import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.akshayAshokCode.textrecognition.R;
+import com.akshayAshokCode.textrecognition.databinding.ActivityMainBinding;
 import com.akshayAshokCode.textrecognition.presentation.adapter.FragmentAdapter;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.play.core.appupdate.AppUpdateInfo;
@@ -32,8 +33,9 @@ public class MainActivity extends AppCompatActivity {
     FragmentManager fragmentManager;
     private static final String TAG = "MainActivity";
     private final int REQUEST_CODE = 11;
-    ViewPager2 viewPager;
-    TabLayout tabLayout;
+    private ActivityMainBinding binding;
+  //  ViewPager2 viewPager;
+   // TabLayout tabLayout;
     FragmentAdapter fragmentAdapter;
 
     @Override
@@ -45,21 +47,20 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        binding=ActivityMainBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
 
-        viewPager = findViewById(R.id.pager);
-        tabLayout = findViewById(R.id.tab_layout);
         fragmentManager = getSupportFragmentManager();
         fragmentAdapter = new FragmentAdapter(fragmentManager, getLifecycle());
-        viewPager.setAdapter(fragmentAdapter);
+        binding.pager.setAdapter(fragmentAdapter);
 
-        tabLayout.addTab(tabLayout.newTab().setText("Recognize Text"));
-        tabLayout.addTab(tabLayout.newTab().setText("Text to Speech"));
+        binding.tabLayout.addTab(binding.tabLayout.newTab().setText("Recognize Text"));
+        binding.tabLayout.addTab(binding.tabLayout.newTab().setText("Text to Speech"));
 
-        tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+        binding.tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
-                viewPager.setCurrentItem(tab.getPosition());
+                binding.pager.setCurrentItem(tab.getPosition());
             }
 
             @Override
@@ -73,10 +74,10 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        viewPager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
+        binding.pager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
             @Override
             public void onPageSelected(int position) {
-                tabLayout.selectTab(tabLayout.getTabAt(position));
+                binding.tabLayout.selectTab(binding.tabLayout.getTabAt(position));
             }
         });
 

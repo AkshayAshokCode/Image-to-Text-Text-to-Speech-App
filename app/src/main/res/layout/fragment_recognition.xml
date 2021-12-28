@@ -120,7 +120,7 @@
                 android:background="@color/colorPrimaryReverse" />
 
             <ImageView
-                android:id="@+id/image"
+                android:id="@+id/imageview"
                 android:layout_width="300dp"
                 android:layout_height="300dp"
                 android:layout_gravity="center_horizontal"
@@ -129,10 +129,12 @@
                 android:focusable="true"
                 android:focusableInTouchMode="true"
                 android:visibility="gone" />
+
             <View
                 android:layout_width="wrap_content"
                 android:layout_height="0.5dp"
                 android:background="@color/colorPrimaryReverse" />
+
             <TextView
                 android:id="@+id/heading"
                 android:layout_width="match_parent"
@@ -165,9 +167,9 @@
                 android:layout_gravity="center_horizontal"
                 android:layout_marginBottom="30dp"
                 android:background="@drawable/button"
-               android:padding="15dp"
                 android:focusable="true"
                 android:focusableInTouchMode="true"
+                android:padding="15dp"
                 android:text="Copy Text"
                 android:textColor="@android:color/white"
                 android:visibility="gone" />
