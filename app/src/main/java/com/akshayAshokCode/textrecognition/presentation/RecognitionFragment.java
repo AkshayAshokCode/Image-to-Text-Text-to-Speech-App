@@ -32,6 +32,7 @@ import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
 
 import com.akshayAshokCode.textrecognition.R;
+import com.akshayAshokCode.textrecognition.databinding.FragmentRecognitionBinding;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.mlkit.vision.common.InputImage;
@@ -47,70 +48,58 @@ import java.util.Date;
 
 public class RecognitionFragment extends Fragment {
 
-    ImageView imageView;
-    Bitmap imageBitmap;
-    Context context;
-    Button copy;
-    Uri outputFileUri;
-    TextView text, heading;
-    ProgressDialog progressDialog;
+    private Bitmap imageBitmap;
+    private Uri outputFileUri;
+    private ProgressDialog progressDialog;
     private static final String TAG = "RecognitionFragment";
     static final int REQUEST_IMAGE_CAPTURE = 301;
     private AlphaAnimation buttonClick = new AlphaAnimation(1F, 0.5F);
     private static final int STORAGE_REQUEST = 200;
     private static final int CAMERA_REQUEST = 201;
     private static final int IMAGEPICK_GALLERY_REQUEST = 300;
-    String[] storagePermission, cameraPermission;
-    TextRecognizer recognizer = TextRecognition.getClient();
-    LinearLayout camera, gallery, detect;
-
+    private String[] storagePermission, cameraPermission;
+    private TextRecognizer recognizer = TextRecognition.getClient();
+    private FragmentRecognitionBinding binding;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View v = inflater.inflate(R.layout.fragment_recognition, container, false);
+        binding=FragmentRecognitionBinding.inflate(inflater);
         getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
-        imageView = v.findViewById(R.id.image);
-        text = v.findViewById(R.id.text);
-        heading = v.findViewById(R.id.heading);
-        copy = v.findViewById(R.id.copy);
-        camera = v.findViewById(R.id.ln_camera);
-        gallery = v.findViewById(R.id.ln_gallery);
-        detect = v.findViewById(R.id.ln_detect);
         progressDialog = new ProgressDialog(getContext());
 
         // allowing permissions of gallery
         storagePermission = new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE};
         cameraPermission = new String[]{Manifest.permission.CAMERA};
 
-        camera.setOnClickListener(v14 -> {
+        binding.lnCamera.setOnClickListener(v14 -> {
             v14.startAnimation(buttonClick);
-            text.setText("");
+            binding.text.setText("");
             checkCameraPermission();
         });
-        gallery.setOnClickListener(v13 -> {
+        binding.lnGallery.setOnClickListener(v13 -> {
             v13.startAnimation(buttonClick);
-            text.setText("");
+            binding.text.setText("");
             checkGalleryPermission();
         });
-        detect.setOnClickListener(v12 -> {
-            if (imageView.getVisibility() == View.VISIBLE) {
+        binding.lnDetect.setOnClickListener(v12 -> {
+            if (binding.imageview.getVisibility() == View.VISIBLE) {
                 v12.startAnimation(buttonClick);
                 progressDialog.setMessage("Processing Image...");
                 progressDialog.show();
-                text.setText("");
+                binding.text.setText("");
                 recognizeText();
             } else
-                Snackbar.make(gallery, "No image selected", Snackbar.LENGTH_SHORT).show();
+                Snackbar.make(binding.lnGallery, "No image selected", Snackbar.LENGTH_SHORT).show();
         });
-        copy.setOnClickListener(v1 -> {
+        binding.copy.setOnClickListener(v1 -> {
             ClipboardManager clipboardManager = (ClipboardManager) getActivity().getSystemService(Context.CLIPBOARD_SERVICE);
-            ClipData clipData = ClipData.newPlainText("TextView", text.getText().toString());
+            ClipData clipData = ClipData.newPlainText("TextView", binding.text.getText().toString());
             clipboardManager.setPrimaryClip(clipData);
-            Snackbar.make(copy, "Text copied", Snackbar.LENGTH_SHORT).show();
+            Snackbar.make(binding.copy, "Text copied", Snackbar.LENGTH_SHORT).show();
         });
 
-        return v;
+        return binding.getRoot();
     }
 
     private void recognizeText() {
@@ -129,16 +118,16 @@ public class RecognitionFragment extends Fragment {
         progressDialog.dismiss();
         String resultText = result.getText();
         if (resultText != null) {
-            text.setVisibility(View.VISIBLE);
-            heading.setVisibility(View.VISIBLE);
-            copy.setVisibility(View.VISIBLE);
+            binding.text.setVisibility(View.VISIBLE);
+            binding.heading.setVisibility(View.VISIBLE);
+            binding.copy.setVisibility(View.VISIBLE);
             for (Text.TextBlock block : result.getTextBlocks()) {
                 String blockText = block.getText();
-                text.append(blockText + "\n");
+                binding.text.append(blockText + "\n");
             }
-            copy.requestFocus();
+            binding.copy.requestFocus();
         } else
-            Snackbar.make(gallery, "No text", Snackbar.LENGTH_SHORT).show();
+            Snackbar.make(binding.lnGallery, "No text", Snackbar.LENGTH_SHORT).show();
     }
 
     private void checkGalleryPermission() {
@@ -174,7 +163,7 @@ public class RecognitionFragment extends Fragment {
 
     // Requesting camera permission
     private void requestCameraPermission() {
-        requestPermissions(storagePermission, CAMERA_REQUEST);
+        requestPermissions(cameraPermission, CAMERA_REQUEST);
     }
 
     private void pickImageFromGallery() {
@@ -243,11 +232,10 @@ public class RecognitionFragment extends Fragment {
 
                     try {
                         bitmap = MediaStore.Images.Media.getBitmap(getContext().getContentResolver(), resultUri);
-                        imageView.setImageBitmap(bitmap);
+                        binding.imageview.setImageBitmap(bitmap);
                         imageBitmap = bitmap;
-                        context = imageView.getContext();
-                        imageView.setVisibility(View.VISIBLE);
-                        imageView.requestFocus();
+                        binding.imageview.setVisibility(View.VISIBLE);
+                        binding.imageview.requestFocus();
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
@@ -269,7 +257,7 @@ public class RecognitionFragment extends Fragment {
                 if (writeStorageAccepted) {
                     pickImageFromGallery();
                 } else {
-                    Snackbar.make(gallery, "Please Enable Storage Permissions", Snackbar.LENGTH_SHORT).show();
+                    Snackbar.make(binding.lnGallery, "Please Enable Storage Permissions", Snackbar.LENGTH_SHORT).show();
                 }
             }
         } else if (requestCode == CAMERA_REQUEST) {
@@ -278,7 +266,7 @@ public class RecognitionFragment extends Fragment {
                 if (cameraAccessAccepted) {
                     clickFromCamera();
                 } else {
-                    Snackbar.make(gallery, "Please Enable Camera Permissions", Snackbar.LENGTH_SHORT).show();
+                    Snackbar.make(binding.lnGallery,"Please Enable Camera Permissions", Snackbar.LENGTH_SHORT).show();
                 }
             }
         }
