@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/colorPrimary"
-    tools:context="com.akshayAshokCode.textrecognition.presentation.SpeechFragment">
+    tools:context="com.akshayAshokCode.textrecognition.presentation.speech.SpeechFragment">
 
     <ScrollView
         android:layout_width="match_parent"

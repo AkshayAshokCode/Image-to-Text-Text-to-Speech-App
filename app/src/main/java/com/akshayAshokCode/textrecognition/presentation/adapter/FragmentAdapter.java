@@ -6,8 +6,8 @@ import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.Lifecycle;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 
-import com.akshayAshokCode.textrecognition.presentation.RecognitionFragment;
-import com.akshayAshokCode.textrecognition.presentation.SpeechFragment;
+import com.akshayAshokCode.textrecognition.presentation.textrecognition.RecognitionFragment;
+import com.akshayAshokCode.textrecognition.presentation.speech.SpeechFragment;
 
 public class FragmentAdapter extends FragmentStateAdapter {
     public FragmentAdapter(@NonNull FragmentManager fragmentManager, @NonNull Lifecycle lifecycle) {

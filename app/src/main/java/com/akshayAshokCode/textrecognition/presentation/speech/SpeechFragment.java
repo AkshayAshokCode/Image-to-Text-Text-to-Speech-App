@@ -1,6 +1,5 @@
-package com.akshayAshokCode.textrecognition.presentation;
+package com.akshayAshokCode.textrecognition.presentation.speech;
 
-import android.media.AudioManager;
 import android.os.Bundle;
 import android.speech.tts.TextToSpeech;
 import android.view.LayoutInflater;
@@ -8,36 +7,38 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.SeekBar;
 
-import androidx.appcompat.widget.AppCompatSpinner;
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.akshayAshokCode.textrecognition.R;
-import com.akshayAshokCode.textrecognition.data.LanguageData;
 import com.akshayAshokCode.textrecognition.databinding.FragmentSpeechBinding;
 import com.akshayAshokCode.textrecognition.model.LanguageType;
 import com.akshayAshokCode.textrecognition.util.PitchAndSpeedManager;
 import com.akshayAshokCode.textrecognition.util.TextToSpeechManager;
 import com.google.android.material.snackbar.Snackbar;
 
-import java.util.HashMap;
 import java.util.Locale;
 
 public class SpeechFragment extends Fragment {
     private TextToSpeech textToSpeech;
     private FragmentSpeechBinding binding;
-    private static final String TAG = "SpeechFragment";
+    // private static final String TAG = "SpeechFragment";
+    private ArrayAdapter<LanguageType> adapter;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         binding = FragmentSpeechBinding.inflate(inflater);
-        LanguageType[] languageTypes = new LanguageData().getLanguageData();
-        ArrayAdapter<LanguageType> adapter = new ArrayAdapter<LanguageType>(getContext(), R.layout.support_simple_spinner_dropdown_item, languageTypes);
-        binding.spinner.setAdapter(adapter);
+        SpeechViewModel viewModel = new ViewModelProvider(this).get(SpeechViewModel.class);
+        viewModel.getLanguages().observe(getViewLifecycleOwner(), languageTypes -> {
+            for (int i = 0; i < languageTypes.size(); i++) {
+                LanguageType[] languageList = languageTypes.toArray(new LanguageType[i]);
+                adapter = new ArrayAdapter<>(getContext(), R.layout.support_simple_spinner_dropdown_item, languageList);
+                binding.spinner.setAdapter(adapter);
+            }
+        });
         binding.spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
@@ -76,13 +77,16 @@ public class SpeechFragment extends Fragment {
         float speed = new PitchAndSpeedManager().getPitch(binding.speed);
         CharSequence text = binding.text.getText().toString();
 
-        HashMap<String, String> myHashAlarm = new HashMap<String, String>();
-        myHashAlarm.put(TextToSpeech.Engine.KEY_PARAM_STREAM,
-                String.valueOf(AudioManager.STREAM_ALARM));
+
         textToSpeech.setPitch(pitch);
         textToSpeech.setSpeechRate(speed);
-        //textToSpeech.speak(text, TextToSpeech.QUEUE_FLUSH, myHashAlarm);
-        // CharSequence charText=text;
+
+       /* HashMap<String, String> myHashAlarm = new HashMap<String, String>();
+        myHashAlarm.put(TextToSpeech.Engine.KEY_PARAM_STREAM,
+                String.valueOf(AudioManager.STREAM_ALARM));
+        textToSpeech.speak(text, TextToSpeech.QUEUE_FLUSH, myHashAlarm);
+         CharSequence charText=text;
+        */
         textToSpeech.speak(text, TextToSpeech.QUEUE_FLUSH, null, TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID);
     }
 
