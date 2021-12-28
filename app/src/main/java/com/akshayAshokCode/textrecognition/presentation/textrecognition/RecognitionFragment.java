@@ -1,4 +1,4 @@
-package com.akshayAshokCode.textrecognition.presentation;
+package com.akshayAshokCode.textrecognition.presentation.textrecognition;
 
 import android.Manifest;
 import android.app.Activity;
@@ -20,10 +20,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.view.animation.AlphaAnimation;
-import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -31,9 +27,7 @@ import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
 
-import com.akshayAshokCode.textrecognition.R;
 import com.akshayAshokCode.textrecognition.databinding.FragmentRecognitionBinding;
-import com.google.android.gms.tasks.Task;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.mlkit.vision.common.InputImage;
 import com.google.mlkit.vision.text.Text;
@@ -60,11 +54,12 @@ public class RecognitionFragment extends Fragment {
     private String[] storagePermission, cameraPermission;
     private TextRecognizer recognizer = TextRecognition.getClient();
     private FragmentRecognitionBinding binding;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        binding=FragmentRecognitionBinding.inflate(inflater);
+        binding = FragmentRecognitionBinding.inflate(inflater);
         getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
         progressDialog = new ProgressDialog(getContext());
 
@@ -105,13 +100,12 @@ public class RecognitionFragment extends Fragment {
     private void recognizeText() {
 
         InputImage image = InputImage.fromBitmap(imageBitmap, 0);
-        Task<Text> result =
-                recognizer.process(image)
-                        .addOnSuccessListener(visionText -> processTextBlock(visionText))
-                        .addOnFailureListener(
-                                e -> {
-                                    Log.e(TAG, e.getMessage());
-                                });
+        recognizer.process(image)
+                .addOnSuccessListener(this::processTextBlock)
+                .addOnFailureListener(
+                        e -> {
+                            Log.e(TAG, e.getMessage());
+                        });
     }
 
     private void processTextBlock(Text result) {
@@ -266,7 +260,7 @@ public class RecognitionFragment extends Fragment {
                 if (cameraAccessAccepted) {
                     clickFromCamera();
                 } else {
-                    Snackbar.make(binding.lnGallery,"Please Enable Camera Permissions", Snackbar.LENGTH_SHORT).show();
+                    Snackbar.make(binding.lnGallery, "Please Enable Camera Permissions", Snackbar.LENGTH_SHORT).show();
                 }
             }
         }
