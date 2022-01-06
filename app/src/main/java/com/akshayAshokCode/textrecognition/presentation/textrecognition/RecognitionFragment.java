@@ -229,6 +229,7 @@ public class RecognitionFragment extends Fragment {
                         binding.imageview.setImageBitmap(bitmap);
                         imageBitmap = bitmap;
                         binding.imageview.setVisibility(View.VISIBLE);
+                        binding.cardView.setVisibility(View.VISIBLE);
                         binding.imageview.requestFocus();
                     } catch (IOException e) {
                         e.printStackTrace();
@@ -245,6 +246,7 @@ public class RecognitionFragment extends Fragment {
     // permission if not given
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode,permissions,grantResults);
         if (requestCode == STORAGE_REQUEST) {
             if (grantResults.length > 0) {
                 boolean writeStorageAccepted = grantResults[0] == PackageManager.PERMISSION_GRANTED;
