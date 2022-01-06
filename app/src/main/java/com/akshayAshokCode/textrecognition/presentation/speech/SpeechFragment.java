@@ -54,7 +54,6 @@ public class SpeechFragment extends Fragment {
                     textToSpeech.stop();
                 }
                 textToSpeech = new TextToSpeechManager().textToSpeech(getContext(), selectedLanguage);
-
             }
 
             @Override
@@ -71,9 +70,9 @@ public class SpeechFragment extends Fragment {
 
         binding.stop.setOnClickListener(view -> {
             if (textToSpeech != null) {
-                if(textToSpeech.isSpeaking()){
+                if (textToSpeech.isSpeaking()) {
                     textToSpeech.stop();
-                }else{
+                } else {
                     Snackbar.make(binding.talk, "Not Talking", Snackbar.LENGTH_SHORT).show();
                 }
             }
@@ -81,15 +80,11 @@ public class SpeechFragment extends Fragment {
         binding.pitch.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
-                if (i <= 30) {
-                    seekBar.getProgressDrawable().setColorFilter(ContextCompat.getColor(getContext(),R.color.seekbar_low), PorterDuff.Mode.SRC_IN);
-                    seekBar.getThumb().setColorFilter(ContextCompat.getColor(getContext(),R.color.seekbar_low), PorterDuff.Mode.SRC_IN);
-                } else if (i <= 70) {
-                    seekBar.getProgressDrawable().setColorFilter(ContextCompat.getColor(getContext(),R.color.seekbar_mid), PorterDuff.Mode.SRC_IN);
-                    seekBar.getThumb().setColorFilter(ContextCompat.getColor(getContext(),R.color.seekbar_mid), PorterDuff.Mode.SRC_IN);
-                } else {
-                    seekBar.getProgressDrawable().setColorFilter(ContextCompat.getColor(getContext(),R.color.seekbar_high), PorterDuff.Mode.SRC_IN);
-                    seekBar.getThumb().setColorFilter(ContextCompat.getColor(getContext(),R.color.seekbar_high), PorterDuff.Mode.SRC_IN);
+                int color = viewModel.getColor(i);
+                seekBar.getProgressDrawable().setColorFilter(ContextCompat.getColor(getContext(), color), PorterDuff.Mode.SRC_IN);
+                seekBar.getThumb().setColorFilter(ContextCompat.getColor(getContext(), color), PorterDuff.Mode.SRC_IN);
+                if (textToSpeech.isSpeaking()) {
+                    speak();
                 }
             }
 
@@ -106,16 +101,13 @@ public class SpeechFragment extends Fragment {
         binding.speed.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
-                if (i <= 30) {
-                    seekBar.getProgressDrawable().setColorFilter(ContextCompat.getColor(getContext(),R.color.seekbar_low), PorterDuff.Mode.SRC_IN);
-                    seekBar.getThumb().setColorFilter(ContextCompat.getColor(getContext(),R.color.seekbar_low), PorterDuff.Mode.SRC_IN);
-                } else if (i <= 70) {
-                    seekBar.getProgressDrawable().setColorFilter(ContextCompat.getColor(getContext(),R.color.seekbar_mid), PorterDuff.Mode.SRC_IN);
-                    seekBar.getThumb().setColorFilter(ContextCompat.getColor(getContext(),R.color.seekbar_mid), PorterDuff.Mode.SRC_IN);
-                } else {
-                    seekBar.getProgressDrawable().setColorFilter(ContextCompat.getColor(getContext(),R.color.seekbar_high), PorterDuff.Mode.SRC_IN);
-                    seekBar.getThumb().setColorFilter(ContextCompat.getColor(getContext(),R.color.seekbar_high), PorterDuff.Mode.SRC_IN);
+                int color = viewModel.getColor(i);
+                seekBar.getProgressDrawable().setColorFilter(ContextCompat.getColor(getContext(), color), PorterDuff.Mode.SRC_IN);
+                seekBar.getThumb().setColorFilter(ContextCompat.getColor(getContext(), color), PorterDuff.Mode.SRC_IN);
+                if (textToSpeech.isSpeaking()) {
+                    speak();
                 }
+
             }
 
             @Override
@@ -132,11 +124,10 @@ public class SpeechFragment extends Fragment {
         return binding.getRoot();
     }
 
-    public void speak() {
-        float pitch = new PitchAndSpeedManager().getPitch(binding.pitch);
-        float speed = new PitchAndSpeedManager().getPitch(binding.speed);
+    private void speak() {
+        float pitch = getPitch();
+        float speed = getSpeed();
         CharSequence text = binding.text.getText().toString();
-
 
         textToSpeech.setPitch(pitch);
         textToSpeech.setSpeechRate(speed);
@@ -147,7 +138,16 @@ public class SpeechFragment extends Fragment {
         textToSpeech.speak(text, TextToSpeech.QUEUE_FLUSH, myHashAlarm);
          CharSequence charText=text;
         */
+
         textToSpeech.speak(text, TextToSpeech.QUEUE_FLUSH, null, TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID);
+    }
+
+    private float getPitch() {
+        return new PitchAndSpeedManager().getPitch(binding.pitch);
+    }
+
+    private float getSpeed() {
+        return new PitchAndSpeedManager().getSpeed(binding.speed);
     }
 
     @Override
