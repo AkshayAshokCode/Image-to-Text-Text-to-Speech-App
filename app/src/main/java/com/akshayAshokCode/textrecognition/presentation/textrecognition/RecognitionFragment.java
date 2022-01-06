@@ -33,6 +33,7 @@ import com.google.mlkit.vision.common.InputImage;
 import com.google.mlkit.vision.text.Text;
 import com.google.mlkit.vision.text.TextRecognition;
 import com.google.mlkit.vision.text.TextRecognizer;
+import com.google.mlkit.vision.text.latin.TextRecognizerOptions;
 import com.theartofdev.edmodo.cropper.CropImage;
 import com.theartofdev.edmodo.cropper.CropImageView;
 
@@ -52,7 +53,6 @@ public class RecognitionFragment extends Fragment {
     private static final int CAMERA_REQUEST = 201;
     private static final int IMAGEPICK_GALLERY_REQUEST = 300;
     private String[] storagePermission, cameraPermission;
-    private TextRecognizer recognizer = TextRecognition.getClient();
     private FragmentRecognitionBinding binding;
 
     @Override
@@ -62,19 +62,16 @@ public class RecognitionFragment extends Fragment {
         binding = FragmentRecognitionBinding.inflate(inflater);
         getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
         progressDialog = new ProgressDialog(getContext());
-
         // allowing permissions of gallery
         storagePermission = new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE};
         cameraPermission = new String[]{Manifest.permission.CAMERA};
 
         binding.lnCamera.setOnClickListener(v14 -> {
             v14.startAnimation(buttonClick);
-            binding.text.setText("");
             checkCameraPermission();
         });
         binding.lnGallery.setOnClickListener(v13 -> {
             v13.startAnimation(buttonClick);
-            binding.text.setText("");
             checkGalleryPermission();
         });
         binding.lnDetect.setOnClickListener(v12 -> {
@@ -98,7 +95,7 @@ public class RecognitionFragment extends Fragment {
     }
 
     private void recognizeText() {
-
+        TextRecognizer recognizer = TextRecognition.getClient(TextRecognizerOptions.DEFAULT_OPTIONS);
         InputImage image = InputImage.fromBitmap(imageBitmap, 0);
         recognizer.process(image)
                 .addOnSuccessListener(this::processTextBlock)
@@ -111,10 +108,11 @@ public class RecognitionFragment extends Fragment {
     private void processTextBlock(Text result) {
         progressDialog.dismiss();
         String resultText = result.getText();
-        if (resultText != null) {
+        if (!resultText.isEmpty()) {
             binding.text.setVisibility(View.VISIBLE);
             binding.heading.setVisibility(View.VISIBLE);
             binding.copy.setVisibility(View.VISIBLE);
+
             for (Text.TextBlock block : result.getTextBlocks()) {
                 String blockText = block.getText();
                 binding.text.append(blockText + "\n");
@@ -246,7 +244,7 @@ public class RecognitionFragment extends Fragment {
     // permission if not given
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode,permissions,grantResults);
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (requestCode == STORAGE_REQUEST) {
             if (grantResults.length > 0) {
                 boolean writeStorageAccepted = grantResults[0] == PackageManager.PERMISSION_GRANTED;
@@ -275,5 +273,8 @@ public class RecognitionFragment extends Fragment {
                 .setInitialCropWindowPaddingRatio(0)
                 .setCropShape(CropImageView.CropShape.RECTANGLE)
                 .start(getContext(), this);
+        binding.text.setVisibility(View.GONE);
+        binding.heading.setVisibility(View.GONE);
+        binding.copy.setVisibility(View.GONE);
     }
 }
