@@ -1,14 +1,19 @@
 package com.akshayAshokCode.textrecognition.presentation.speech;
 
+import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.speech.tts.TextToSpeech;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.SeekBar;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
@@ -24,7 +29,7 @@ import java.util.Locale;
 public class SpeechFragment extends Fragment {
     private TextToSpeech textToSpeech;
     private FragmentSpeechBinding binding;
-    // private static final String TAG = "SpeechFragment";
+    private static final String TAG = "SpeechFragment";
     private ArrayAdapter<LanguageType> adapter;
 
     @Override
@@ -39,6 +44,7 @@ public class SpeechFragment extends Fragment {
                 binding.spinner.setAdapter(adapter);
             }
         });
+
         binding.spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
@@ -65,7 +71,61 @@ public class SpeechFragment extends Fragment {
 
         binding.stop.setOnClickListener(view -> {
             if (textToSpeech != null) {
-                textToSpeech.stop();
+                if(textToSpeech.isSpeaking()){
+                    textToSpeech.stop();
+                }else{
+                    Snackbar.make(binding.talk, "Not Talking", Snackbar.LENGTH_SHORT).show();
+                }
+            }
+        });
+        binding.pitch.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
+                if (i <= 30) {
+                    seekBar.getProgressDrawable().setColorFilter(ContextCompat.getColor(getContext(),R.color.seekbar_low), PorterDuff.Mode.SRC_IN);
+                    seekBar.getThumb().setColorFilter(ContextCompat.getColor(getContext(),R.color.seekbar_low), PorterDuff.Mode.SRC_IN);
+                } else if (i <= 70) {
+                    seekBar.getProgressDrawable().setColorFilter(ContextCompat.getColor(getContext(),R.color.seekbar_mid), PorterDuff.Mode.SRC_IN);
+                    seekBar.getThumb().setColorFilter(ContextCompat.getColor(getContext(),R.color.seekbar_mid), PorterDuff.Mode.SRC_IN);
+                } else {
+                    seekBar.getProgressDrawable().setColorFilter(ContextCompat.getColor(getContext(),R.color.seekbar_high), PorterDuff.Mode.SRC_IN);
+                    seekBar.getThumb().setColorFilter(ContextCompat.getColor(getContext(),R.color.seekbar_high), PorterDuff.Mode.SRC_IN);
+                }
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+
+            }
+        });
+        binding.speed.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
+                if (i <= 30) {
+                    seekBar.getProgressDrawable().setColorFilter(ContextCompat.getColor(getContext(),R.color.seekbar_low), PorterDuff.Mode.SRC_IN);
+                    seekBar.getThumb().setColorFilter(ContextCompat.getColor(getContext(),R.color.seekbar_low), PorterDuff.Mode.SRC_IN);
+                } else if (i <= 70) {
+                    seekBar.getProgressDrawable().setColorFilter(ContextCompat.getColor(getContext(),R.color.seekbar_mid), PorterDuff.Mode.SRC_IN);
+                    seekBar.getThumb().setColorFilter(ContextCompat.getColor(getContext(),R.color.seekbar_mid), PorterDuff.Mode.SRC_IN);
+                } else {
+                    seekBar.getProgressDrawable().setColorFilter(ContextCompat.getColor(getContext(),R.color.seekbar_high), PorterDuff.Mode.SRC_IN);
+                    seekBar.getThumb().setColorFilter(ContextCompat.getColor(getContext(),R.color.seekbar_high), PorterDuff.Mode.SRC_IN);
+                }
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+
             }
         });
 
