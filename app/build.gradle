@@ -8,8 +8,8 @@ android {
         applicationId "com.akshayAshokCode.textrecognition"
         minSdkVersion 21
         targetSdkVersion 31
-        versionCode 2
-        versionName "1.1.0"
+        versionCode 3
+        versionName "1.2.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -24,9 +24,19 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
+    buildFeatures{
+        viewBinding true
+    }
+    configurations {
+        cleanedAnnotations
+        implementation.exclude group: 'org.jetbrains' , module:'annotations'
+    }
+
 }
 
 dependencies {
+    def lifecycle_version = "2.4.0"
+
     implementation fileTree(dir: "libs", include: ["*.jar"])
     implementation 'androidx.appcompat:appcompat:1.4.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.2'
@@ -34,11 +44,16 @@ dependencies {
     implementation 'org.jetbrains:annotations-java5:15.0'
     testImplementation 'junit:junit:4.13.2'
     implementation 'com.google.android.material:material:1.5.0-beta01'
-    implementation 'com.google.android.gms:play-services-mlkit-text-recognition:16.1.1'
+    implementation 'com.google.android.gms:play-services-mlkit-text-recognition:17.0.1'
     implementation 'com.mikhaellopez:circularimageview:3.2.0'
     androidTestImplementation 'androidx.test.ext:junit:1.1.3'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
 
     api "com.theartofdev.edmodo:android-image-cropper:2.8.0"
     implementation 'com.google.android.play:core:1.10.2'
+
+    // ViewModel
+    implementation "androidx.lifecycle:lifecycle-viewmodel:$lifecycle_version"
+    // LiveData
+    implementation "androidx.lifecycle:lifecycle-livedata:$lifecycle_version"
 }

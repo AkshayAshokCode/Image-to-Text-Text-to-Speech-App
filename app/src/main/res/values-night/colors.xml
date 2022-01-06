@@ -8,4 +8,16 @@
     <color name="textColor">#FF202020</color>
     <!-- colors for tabs-->
     <color name="textColorForTabs">#ffffff</color>
+
+    <color name="background_start_color">#000000</color>
+    <color name="background_center_color">#151515</color>
+    <color name="background_end_color">#2C2A2A</color>
+
+    <color name="card_view_start_color">#000000</color>
+    <color name="card_view_center_color">#151515</color>
+    <color name="card_view_end_color">#2C2A2A</color>
+
+    <color name="seekbar_low">#FFFF00</color>
+    <color name="seekbar_mid">#00cccc</color>
+    <color name="seekbar_high">#FF0000</color>
 </resources>
