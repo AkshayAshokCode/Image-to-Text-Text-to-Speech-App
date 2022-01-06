@@ -54,9 +54,11 @@
                         android:orientation="vertical">
 
                         <TextView
+                            android:id="@+id/pitch_text"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="15dp"
+                            android:textColor="@color/colorPrimaryReverse"
                             android:text="@string/pitch" />
 
                         <SeekBar
@@ -69,6 +71,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="15dp"
+                            android:textColor="@color/colorPrimaryReverse"
                             android:text="@string/speed" />
 
                         <SeekBar
@@ -80,6 +83,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="15dp"
+                            android:textColor="@color/colorPrimaryReverse"
                             android:text="@string/accent"/>
                         <androidx.appcompat.widget.AppCompatSpinner
                             android:id="@+id/spinner"
