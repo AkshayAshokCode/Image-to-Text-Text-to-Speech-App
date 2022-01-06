@@ -3,6 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
+    android:scrollbars="none"
     android:layout_height="match_parent"
     android:background="@drawable/background_gradient"
     tools:context="com.akshayAshokCode.textrecognition.presentation.textrecognition.RecognitionFragment">
@@ -163,8 +164,8 @@
                 android:layout_marginTop="20dp"
                 android:text="@string/detected_text"
                 android:textAlignment="center"
+                android:textColor="@color/colorPrimaryReverse"
                 android:textSize="20sp"
-                android:textStyle="bold"
                 android:visibility="gone" />
 
             <TextView
