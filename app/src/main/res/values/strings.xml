@@ -8,7 +8,7 @@
     <string name="detected_text">Detected Text:</string>
     <string name="copy_text">Copy Text</string>
     <string name="image">image</string>
-    <string name="enter_text">Enter text</string>
+    <string name="enter_text">What do you want to listen to?</string>
     <string name="pitch">Pitch</string>
     <string name="speed">Speed</string>
     <string name="accent">Accent</string>

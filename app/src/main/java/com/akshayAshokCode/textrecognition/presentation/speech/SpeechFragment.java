@@ -73,8 +73,8 @@ public class SpeechFragment extends Fragment {
                 if (!checkAudioPermission()) {
                     requestAudioPermission();
                 } else {
-                    InputMethodManager inputMethodManager = (InputMethodManager)requireActivity().getSystemService(getActivity().INPUT_METHOD_SERVICE);
-                    inputMethodManager.hideSoftInputFromWindow(v1.getApplicationWindowToken(),0);
+                    InputMethodManager inputMethodManager = (InputMethodManager) requireActivity().getSystemService(getActivity().INPUT_METHOD_SERVICE);
+                    inputMethodManager.hideSoftInputFromWindow(v1.getApplicationWindowToken(), 0);
                     speak();
                 }
             }
@@ -96,8 +96,10 @@ public class SpeechFragment extends Fragment {
                 int color = viewModel.getColor(i);
                 seekBar.getProgressDrawable().setColorFilter(ContextCompat.getColor(getContext(), color), PorterDuff.Mode.SRC_IN);
                 seekBar.getThumb().setColorFilter(ContextCompat.getColor(getContext(), color), PorterDuff.Mode.SRC_IN);
-                if (textToSpeech.isSpeaking()) {
-                    speak();
+                if (textToSpeech != null) {
+                    if (textToSpeech.isSpeaking()) {
+                        speak();
+                    }
                 }
             }
 
@@ -117,8 +119,10 @@ public class SpeechFragment extends Fragment {
                 int color = viewModel.getColor(i);
                 seekBar.getProgressDrawable().setColorFilter(ContextCompat.getColor(getContext(), color), PorterDuff.Mode.SRC_IN);
                 seekBar.getThumb().setColorFilter(ContextCompat.getColor(getContext(), color), PorterDuff.Mode.SRC_IN);
-                if (textToSpeech.isSpeaking()) {
-                    speak();
+                if (textToSpeech != null) {
+                    if (textToSpeech.isSpeaking()) {
+                        speak();
+                    }
                 }
 
             }
@@ -157,6 +161,7 @@ public class SpeechFragment extends Fragment {
                     }
                 });
             }
+
             @Override
             public void onStop(String utteranceId, boolean interrupted) {
                 super.onStop(utteranceId, interrupted);
