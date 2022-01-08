@@ -18,6 +18,6 @@
     <color name="card_view_end_color">#ffffff</color>
 
     <color name="seekbar_low">#228B22</color>
-    <color name="seekbar_mid">#00cccc</color>
+    <color name="seekbar_mid">@android:color/holo_blue_light</color>
     <color name="seekbar_high">#FF0000</color>
 </resources>
