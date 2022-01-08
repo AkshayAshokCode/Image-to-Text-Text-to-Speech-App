@@ -1,13 +1,15 @@
 package com.akshayAshokCode.textrecognition.presentation.speech;
 
-import android.graphics.Color;
+import android.Manifest;
+import android.content.pm.PackageManager;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.speech.tts.TextToSpeech;
-import android.util.Log;
+import android.speech.tts.UtteranceProgressListener;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.SeekBar;
@@ -31,6 +33,8 @@ public class SpeechFragment extends Fragment {
     private FragmentSpeechBinding binding;
     private static final String TAG = "SpeechFragment";
     private ArrayAdapter<LanguageType> adapter;
+    private static final int AUDIO_REQUEST = 202;
+    private String[] audioPermission;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
@@ -44,6 +48,7 @@ public class SpeechFragment extends Fragment {
                 binding.spinner.setAdapter(adapter);
             }
         });
+        audioPermission = new String[]{Manifest.permission.RECORD_AUDIO};
 
         binding.spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -64,8 +69,16 @@ public class SpeechFragment extends Fragment {
         binding.talk.setOnClickListener(v1 -> {
             if (binding.text.getText().toString().equals("")) {
                 Snackbar.make(binding.talk, "No Text Entered", Snackbar.LENGTH_SHORT).show();
-            } else
-                speak();
+            } else {
+                if (!checkAudioPermission()) {
+                    requestAudioPermission();
+                } else {
+                    InputMethodManager inputMethodManager = (InputMethodManager)requireActivity().getSystemService(getActivity().INPUT_METHOD_SERVICE);
+                    inputMethodManager.hideSoftInputFromWindow(v1.getApplicationWindowToken(),0);
+                    speak();
+                }
+            }
+
         });
 
         binding.stop.setOnClickListener(view -> {
@@ -132,15 +145,87 @@ public class SpeechFragment extends Fragment {
         textToSpeech.setPitch(pitch);
         textToSpeech.setSpeechRate(speed);
 
-       /* HashMap<String, String> myHashAlarm = new HashMap<String, String>();
-        myHashAlarm.put(TextToSpeech.Engine.KEY_PARAM_STREAM,
-                String.valueOf(AudioManager.STREAM_ALARM));
-        textToSpeech.speak(text, TextToSpeech.QUEUE_FLUSH, myHashAlarm);
-         CharSequence charText=text;
-        */
+        textToSpeech.setOnUtteranceProgressListener(new UtteranceProgressListener() {
+            @Override
+            public void onStart(String s) {
+                getActivity().runOnUiThread(new Runnable() {
+
+                    @Override
+                    public void run() {
+                        binding.audioVisualizer.setVisibility(View.VISIBLE);
+                        binding.audioVisualizer.requestFocus();
+                    }
+                });
+            }
+            @Override
+            public void onStop(String utteranceId, boolean interrupted) {
+                super.onStop(utteranceId, interrupted);
+                getActivity().runOnUiThread(new Runnable() {
+
+                    @Override
+                    public void run() {
+                        binding.audioVisualizer.setVisibility(View.GONE);
+                    }
+                });
+            }
+
+            @Override
+            public void onDone(String s) {
+                getActivity().runOnUiThread(new Runnable() {
+
+                    @Override
+                    public void run() {
+                        binding.audioVisualizer.setVisibility(View.GONE);
+                    }
+                });
+
+            }
+
+            @Override
+            public void onError(String s) {
+
+            }
+
+            @Override
+            public void onAudioAvailable(String utteranceId, byte[] audio) {
+                super.onAudioAvailable(utteranceId, audio);
+                getActivity().runOnUiThread(new Runnable() {
+
+                    @Override
+                    public void run() {
+                        binding.audioVisualizer.updateVisualizer(audio);
+                    }
+                });
+            }
+        });
+
 
         textToSpeech.speak(text, TextToSpeech.QUEUE_FLUSH, null, TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID);
     }
+
+    private Boolean checkAudioPermission() {
+        return ContextCompat.checkSelfPermission(getContext(), Manifest.permission.RECORD_AUDIO) == (PackageManager.PERMISSION_GRANTED);
+    }
+
+    private void requestAudioPermission() {
+        requestPermissions(audioPermission, AUDIO_REQUEST);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == AUDIO_REQUEST) {
+            if (grantResults.length > 0) {
+                boolean audioAccepted = grantResults[0] == PackageManager.PERMISSION_GRANTED;
+                if (audioAccepted) {
+                    speak();
+                } else {
+                    Snackbar.make(binding.talk, "Please enable record audio permissions", Snackbar.LENGTH_SHORT).show();
+                }
+            }
+        }
+    }
+
 
     private float getPitch() {
         return new PitchAndSpeedManager().getPitch(binding.pitch);
