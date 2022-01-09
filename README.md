@@ -9,11 +9,11 @@ Use Google Machine Learning SDK to extract text from an image for text recogniti
 <br/>
 <br/>
 
-<a><img src="https://github.com/AkshayAshokCode/Image-to-Text-Text-to-Speech-App/blob/master/screenshots/screenshot1.png" height="500"></a> &nbsp;&nbsp;&nbsp;&nbsp;
-<a><img src="https://github.com/AkshayAshokCode/Image-to-Text-Text-to-Speech-App/blob/master/screenshots/screenshot2.png" height="500"></a> &nbsp;&nbsp;&nbsp;&nbsp;
-<a><img src="https://github.com/AkshayAshokCode/Image-to-Text-Text-to-Speech-App/blob/master/screenshots/screenshot3.png" height="500"></a>
-<a><img src="https://github.com/AkshayAshokCode/Image-to-Text-Text-to-Speech-App/blob/master/screenshots/screenshot4.png" height="500"></a> &nbsp;&nbsp;&nbsp;&nbsp;
-<a><img src="https://github.com/AkshayAshokCode/Image-to-Text-Text-to-Speech-App/blob/master/screenshots/screenshot5.png" height="500"></a> &nbsp;&nbsp;&nbsp;&nbsp;
-<a><img src="https://github.com/AkshayAshokCode/Image-to-Text-Text-to-Speech-App/blob/master/screenshots/screenshot6.png" height="500"></a>
+<a><img src="https://github.com/AkshayAshokCode/Image-to-Text-Text-to-Speech-App/blob/master/screenshots/screenshot1.jpg" height="500"></a> &nbsp;&nbsp;&nbsp;&nbsp;
+<a><img src="https://github.com/AkshayAshokCode/Image-to-Text-Text-to-Speech-App/blob/master/screenshots/screenshot2.jpg" height="500"></a> &nbsp;&nbsp;&nbsp;&nbsp;
+<a><img src="https://github.com/AkshayAshokCode/Image-to-Text-Text-to-Speech-App/blob/master/screenshots/screenshot3.jpg" height="500"></a>
+<a><img src="https://github.com/AkshayAshokCode/Image-to-Text-Text-to-Speech-App/blob/master/screenshots/screenshot4.jpg" height="500"></a> &nbsp;&nbsp;&nbsp;&nbsp;
+<a><img src="https://github.com/AkshayAshokCode/Image-to-Text-Text-to-Speech-App/blob/master/screenshots/screenshot5.jpg" height="500"></a> &nbsp;&nbsp;&nbsp;&nbsp;
+<a><img src="https://github.com/AkshayAshokCode/Image-to-Text-Text-to-Speech-App/blob/master/screenshots/screenshot6.jpg" height="500"></a>
 
 *You can Install the latest Image to Text to Speech app from here 👉* [<img align=center src="https://www.logo.wine/a/logo/Google_Play/Google_Play-Badge-Logo.wine.svg" width="200" />](https://play.google.com/store/apps/details?id=com.akshayAshokCode.textrecognition)
