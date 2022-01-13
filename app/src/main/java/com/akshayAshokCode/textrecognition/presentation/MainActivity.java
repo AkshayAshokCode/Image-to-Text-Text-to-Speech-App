@@ -1,30 +1,25 @@
 package com.akshayAshokCode.textrecognition.presentation;
 
-import android.content.Context;
 import android.content.Intent;
 import android.content.IntentSender;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.inputmethod.InputMethodManager;
-import android.widget.Button;
-import android.widget.FrameLayout;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.viewpager2.widget.ViewPager2;
 
-import com.akshayAshokCode.textrecognition.R;
 import com.akshayAshokCode.textrecognition.databinding.ActivityMainBinding;
 import com.akshayAshokCode.textrecognition.presentation.adapter.FragmentAdapter;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.play.core.appupdate.AppUpdateInfo;
 import com.google.android.play.core.appupdate.AppUpdateManager;
 import com.google.android.play.core.appupdate.AppUpdateManagerFactory;
+import com.google.android.play.core.install.InstallStateUpdatedListener;
 import com.google.android.play.core.install.model.AppUpdateType;
+import com.google.android.play.core.install.model.InstallStatus;
 import com.google.android.play.core.install.model.UpdateAvailability;
 import com.google.android.play.core.tasks.Task;
 
@@ -34,9 +29,7 @@ public class MainActivity extends AppCompatActivity {
     private static final String TAG = "MainActivity";
     private final int REQUEST_CODE = 11;
     private ActivityMainBinding binding;
-  //  ViewPager2 viewPager;
-   // TabLayout tabLayout;
-    FragmentAdapter fragmentAdapter;
+    private AppUpdateManager appUpdateManager;
 
     @Override
     protected void onStart() {
@@ -45,13 +38,30 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+        if (appUpdateManager != null) {
+            appUpdateManager.getAppUpdateInfo().addOnSuccessListener(appUpdateInfo -> {
+                // If the update is downloaded but not installed,
+                // notify the user to complete the update.
+                if (appUpdateInfo.installStatus() == InstallStatus.DOWNLOADED) {
+                    popupSnackBarForCompleteUpdate();
+                } else {
+                    Log.d(TAG, "State of update:" + appUpdateInfo.installStatus());
+                }
+            });
+        }
+    }
+
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        binding=ActivityMainBinding.inflate(getLayoutInflater());
+        binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
         fragmentManager = getSupportFragmentManager();
-        fragmentAdapter = new FragmentAdapter(fragmentManager, getLifecycle());
+        FragmentAdapter fragmentAdapter = new FragmentAdapter(fragmentManager, getLifecycle());
         binding.pager.setAdapter(fragmentAdapter);
 
         binding.tabLayout.addTab(binding.tabLayout.newTab().setText("Recognize Text"));
@@ -84,7 +94,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void checkUpdate() {
-        AppUpdateManager appUpdateManager = AppUpdateManagerFactory.create(this);
+        appUpdateManager = AppUpdateManagerFactory.create(this);
 
 // Returns an intent object that you use to check for an update.
         Task<AppUpdateInfo> appUpdateInfoTask = appUpdateManager.getAppUpdateInfo();
@@ -94,15 +104,38 @@ public class MainActivity extends AppCompatActivity {
             if (appUpdateInfo.updateAvailability() == UpdateAvailability.UPDATE_AVAILABLE
                     // This example applies an immediate update. To apply a flexible update
                     // instead, pass in AppUpdateType.FLEXIBLE
-                    && appUpdateInfo.isUpdateTypeAllowed(AppUpdateType.IMMEDIATE)) {
+                    && appUpdateInfo.isUpdateTypeAllowed(AppUpdateType.FLEXIBLE)) {
                 // Request the update.
                 try {
-                    appUpdateManager.startUpdateFlowForResult(appUpdateInfo, AppUpdateType.IMMEDIATE, this, REQUEST_CODE);
+                    appUpdateManager.startUpdateFlowForResult(appUpdateInfo,
+                            AppUpdateType.FLEXIBLE,
+                            this,
+                            REQUEST_CODE);
                 } catch (IntentSender.SendIntentException e) {
                     e.printStackTrace();
                 }
             }
         });
+        appUpdateManager.registerListener(listener);
+    }
+    // Create a listener to track request state updates.
+    InstallStateUpdatedListener listener = state -> {
+        if (state.installStatus() == InstallStatus.DOWNLOADED) {
+            // After the update is downloaded, show a notification
+            // and request user confirmation to restart the app.
+            popupSnackBarForCompleteUpdate();
+        }
+        // Log state or install the update.
+        Log.d(TAG, "State of update:"+state.installStatus());
+    };
+    // Displays the snackBar notification and call to action.
+    private void popupSnackBarForCompleteUpdate() {
+        Snackbar snackbar= Snackbar.make(
+                findViewById(android.R.id.content),
+                "An update has just been downloaded.",
+                Snackbar.LENGTH_INDEFINITE);
+        snackbar.setAction("RESTART", view -> appUpdateManager.completeUpdate());
+        snackbar.show();
     }
 
     @Override
@@ -116,4 +149,12 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    protected void onStop() {
+        if (appUpdateManager != null) {
+            appUpdateManager.unregisterListener(listener);
+        }
+        super.onStop();
+
+    }
 }
