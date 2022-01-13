@@ -16,7 +16,7 @@ Use Google Machine Learning SDK to extract text from an image for text recogniti
 - **Tells you how to call a lengthy number in a poper way in different languages**
 <br/>
 
-## ScreenShots :
+## Screenshots :
 <a><img src="https://github.com/AkshayAshokCode/Image-to-Text-Text-to-Speech-App/blob/master/screenshots/screenshot1.jpg" height="500"></a> &nbsp;&nbsp;&nbsp;&nbsp;
 <a><img src="https://github.com/AkshayAshokCode/Image-to-Text-Text-to-Speech-App/blob/master/screenshots/screenshot2.jpg" height="500"></a> &nbsp;&nbsp;&nbsp;&nbsp;
 <a><img src="https://github.com/AkshayAshokCode/Image-to-Text-Text-to-Speech-App/blob/master/screenshots/screenshot3.jpg" height="500"></a>
