@@ -1,23 +1,15 @@
 package com.akshayAshokCode.textrecognition.presentation;
 
-import android.content.Context;
 import android.content.Intent;
 import android.content.IntentSender;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.inputmethod.InputMethodManager;
-import android.widget.Button;
-import android.widget.FrameLayout;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.viewpager2.widget.ViewPager2;
 
-import com.akshayAshokCode.textrecognition.R;
 import com.akshayAshokCode.textrecognition.databinding.ActivityMainBinding;
 import com.akshayAshokCode.textrecognition.presentation.adapter.FragmentAdapter;
 import com.google.android.material.tabs.TabLayout;
