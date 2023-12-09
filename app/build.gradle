@@ -1,15 +1,14 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 31
-    buildToolsVersion "29.0.3"
+    compileSdkVersion 34
 
     defaultConfig {
         applicationId "com.akshayAshokCode.textrecognition"
         minSdkVersion 21
-        targetSdkVersion 31
-        versionCode 4
-        versionName "1.3.0"
+        targetSdkVersion 34
+        versionCode 5
+        versionName "1.4.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -31,26 +30,27 @@ android {
         cleanedAnnotations
         implementation.exclude group: 'org.jetbrains' , module:'annotations'
     }
+    namespace 'com.akshayAshokCode.textrecognition'
 
 }
 
 dependencies {
-    def lifecycle_version = "2.4.0"
+    def lifecycle_version = "2.6.2"
 
     implementation fileTree(dir: "libs", include: ["*.jar"])
-    implementation 'androidx.appcompat:appcompat:1.4.0'
-    implementation 'androidx.constraintlayout:constraintlayout:2.1.2'
+    implementation 'androidx.appcompat:appcompat:1.6.1'
+    implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     implementation 'org.jetbrains:annotations-java5:15.0'
     testImplementation 'junit:junit:4.13.2'
-    implementation 'com.google.android.material:material:1.5.0-beta01'
-    implementation 'com.google.android.gms:play-services-mlkit-text-recognition:17.0.1'
+    implementation 'com.google.android.material:material:1.10.0'
+    implementation 'com.google.android.gms:play-services-mlkit-text-recognition:19.0.0'
     implementation 'com.mikhaellopez:circularimageview:3.2.0'
-    androidTestImplementation 'androidx.test.ext:junit:1.1.3'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.5'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
 
     api "com.theartofdev.edmodo:android-image-cropper:2.8.0"
-    implementation 'com.google.android.play:core:1.10.2'
+    implementation 'com.google.android.play:core:1.10.3'
 
     // ViewModel
     implementation "androidx.lifecycle:lifecycle-viewmodel:$lifecycle_version"

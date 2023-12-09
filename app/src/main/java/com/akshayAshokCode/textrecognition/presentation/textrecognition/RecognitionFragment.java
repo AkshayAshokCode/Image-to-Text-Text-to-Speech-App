@@ -63,7 +63,14 @@ public class RecognitionFragment extends Fragment {
         getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
         progressDialog = new ProgressDialog(getContext());
         // allowing permissions of gallery
-        storagePermission = new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE};
+        if(android.os.Build.VERSION.SDK_INT >32){
+
+            storagePermission = new String[]{Manifest.permission.READ_MEDIA_IMAGES};
+        }else if(android.os.Build.VERSION.SDK_INT >= 30){
+            storagePermission = new String[]{Manifest.permission.READ_EXTERNAL_STORAGE};
+        }else{
+            storagePermission = new String[]{Manifest.permission.READ_EXTERNAL_STORAGE,Manifest.permission.WRITE_EXTERNAL_STORAGE};
+        }
         cameraPermission = new String[]{Manifest.permission.CAMERA};
 
         binding.lnCamera.setOnClickListener(v14 -> {
@@ -185,6 +192,8 @@ public class RecognitionFragment extends Fragment {
         takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, outputFileUri);
         if (takePictureIntent.resolveActivity(getContext().getPackageManager()) != null) {
             startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
+        }else{
+            Snackbar.make(binding.lnGallery, "Unable to open camera", Snackbar.LENGTH_SHORT).show();
         }
     }
 
