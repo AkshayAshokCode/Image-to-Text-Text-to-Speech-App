@@ -18,7 +18,7 @@ import com.google.android.play.core.appupdate.AppUpdateManager;
 import com.google.android.play.core.appupdate.AppUpdateManagerFactory;
 import com.google.android.play.core.install.model.AppUpdateType;
 import com.google.android.play.core.install.model.UpdateAvailability;
-import com.google.android.play.core.tasks.Task;
+import com.google.android.gms.tasks.Task;
 
 // Add image crop feature, Add copy button, add font identifying button
 public class MainActivity extends AppCompatActivity {
@@ -26,8 +26,6 @@ public class MainActivity extends AppCompatActivity {
     private static final String TAG = "MainActivity";
     private final int REQUEST_CODE = 11;
     private ActivityMainBinding binding;
-  //  ViewPager2 viewPager;
-   // TabLayout tabLayout;
     FragmentAdapter fragmentAdapter;
 
     @Override
@@ -39,7 +37,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        binding=ActivityMainBinding.inflate(getLayoutInflater());
+        binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
         fragmentManager = getSupportFragmentManager();
