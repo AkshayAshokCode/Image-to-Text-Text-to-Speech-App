@@ -10,6 +10,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
@@ -34,8 +35,7 @@ import com.google.mlkit.vision.text.Text;
 import com.google.mlkit.vision.text.TextRecognition;
 import com.google.mlkit.vision.text.TextRecognizer;
 import com.google.mlkit.vision.text.latin.TextRecognizerOptions;
-import com.theartofdev.edmodo.cropper.CropImage;
-import com.theartofdev.edmodo.cropper.CropImageView;
+import com.yalantis.ucrop.UCrop;
 
 import java.io.File;
 import java.io.IOException;
@@ -52,6 +52,7 @@ public class RecognitionFragment extends Fragment {
     private static final int STORAGE_REQUEST = 200;
     private static final int CAMERA_REQUEST = 201;
     private static final int IMAGEPICK_GALLERY_REQUEST = 300;
+    private static final int UCROP_REQUEST_CODE = 69;
     private String[] storagePermission, cameraPermission;
     private FragmentRecognitionBinding binding;
 
@@ -63,13 +64,13 @@ public class RecognitionFragment extends Fragment {
         getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
         progressDialog = new ProgressDialog(getContext());
         // allowing permissions of gallery
-        if(android.os.Build.VERSION.SDK_INT >32){
+        if (android.os.Build.VERSION.SDK_INT > 32) {
 
             storagePermission = new String[]{Manifest.permission.READ_MEDIA_IMAGES};
-        }else if(android.os.Build.VERSION.SDK_INT >= 30){
+        } else if (android.os.Build.VERSION.SDK_INT >= 30) {
             storagePermission = new String[]{Manifest.permission.READ_EXTERNAL_STORAGE};
-        }else{
-            storagePermission = new String[]{Manifest.permission.READ_EXTERNAL_STORAGE,Manifest.permission.WRITE_EXTERNAL_STORAGE};
+        } else {
+            storagePermission = new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE};
         }
         cameraPermission = new String[]{Manifest.permission.CAMERA};
 
@@ -147,7 +148,13 @@ public class RecognitionFragment extends Fragment {
 
     // checking storage permissions
     private Boolean checkStoragePermission() {
-        return ContextCompat.checkSelfPermission(getContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE) == (PackageManager.PERMISSION_GRANTED);
+        if(Build.VERSION.SDK_INT > 32){
+            return ContextCompat.checkSelfPermission(getContext(), Manifest.permission.READ_MEDIA_IMAGES) == (PackageManager.PERMISSION_GRANTED);
+        }else if(Build.VERSION.SDK_INT >= 30){
+            return ContextCompat.checkSelfPermission(getContext(), Manifest.permission.READ_EXTERNAL_STORAGE) == (PackageManager.PERMISSION_GRANTED);
+        }else {
+            return ContextCompat.checkSelfPermission(getContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE) == (PackageManager.PERMISSION_GRANTED);
+        }
     }
 
     // checking camera permissions
@@ -183,6 +190,7 @@ public class RecognitionFragment extends Fragment {
         try {
             newfile.createNewFile();
         } catch (IOException e) {
+            Log.e(TAG, "Error creating file:" + e.getMessage());
         }
         outputFileUri = FileProvider.getUriForFile(
                 getContext(),
@@ -190,15 +198,17 @@ public class RecognitionFragment extends Fragment {
                         .getPackageName() + ".provider", newfile);
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, outputFileUri);
-        if (takePictureIntent.resolveActivity(getContext().getPackageManager()) != null) {
+
+        try {
             startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
-        }else{
+        } catch (Exception e){
+            Log.e(TAG, "Camera error:" + e.getMessage());
             Snackbar.make(binding.lnGallery, "Unable to open camera", Snackbar.LENGTH_SHORT).show();
         }
     }
 
     @Override
-    public void onActivityResult(int requestCode, int resultCode, @Nullable @org.jetbrains.annotations.Nullable Intent data) {
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         switch (requestCode) {
             case IMAGEPICK_GALLERY_REQUEST: {
@@ -209,42 +219,35 @@ public class RecognitionFragment extends Fragment {
                 } else {
                     Log.d(TAG, "Result code failed");
                 }
-
+                break;
             }
-            break;
             case REQUEST_IMAGE_CAPTURE: {
                 if (resultCode == Activity.RESULT_OK) {
                     if (outputFileUri != null) {
-                        Uri uri = outputFileUri;
-                        Log.d(TAG, "URI:" + uri);
-                        launchImageCrop(uri);
+                        launchImageCrop(outputFileUri);
                     }
-                } else {
-                    Log.d(TAG, "RESULT code failed:");
                 }
-
+                break;
             }
-            break;
-            case CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE: {
-                CropImage.ActivityResult result = CropImage.getActivityResult(data);
-                if (resultCode == Activity.RESULT_OK && result != null) {
-                    Uri resultUri = result.getUri();
-                    Bitmap bitmap;
-
-                    try {
-                        bitmap = MediaStore.Images.Media.getBitmap(getContext().getContentResolver(), resultUri);
-                        binding.imageview.setImageBitmap(bitmap);
-                        imageBitmap = bitmap;
-                        binding.imageview.setVisibility(View.VISIBLE);
-                        binding.cardView.setVisibility(View.VISIBLE);
-                        binding.imageview.requestFocus();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
-                    assert result != null;
-                    Log.d(TAG, "Crop error:" + result.getError());
+            case UCROP_REQUEST_CODE: {
+                if (resultCode == Activity.RESULT_OK && data != null) {
+                    Uri resultUri = UCrop.getOutput(data);
+                    if (resultUri != null)
+                        try {
+                            Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContext().getContentResolver(), resultUri);
+                            binding.imageview.setImageBitmap(bitmap);
+                            imageBitmap = bitmap;
+                            binding.imageview.setVisibility(View.VISIBLE);
+                            binding.cardView.setVisibility(View.VISIBLE);
+                            binding.imageview.requestFocus();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                } else if (resultCode == UCrop.RESULT_ERROR && data != null) {
+                    Throwable cropError = UCrop.getError(data);
+                    Log.d(TAG, "Crop error:" + cropError);
                 }
+                break;
             }
         }
     }
@@ -276,14 +279,27 @@ public class RecognitionFragment extends Fragment {
     }
 
     private void launchImageCrop(Uri uri) {
-        CropImage.activity(uri)
-                .setGuidelines(CropImageView.Guidelines.ON)
-                .setMinCropResultSize(200, 200)
-                .setInitialCropWindowPaddingRatio(0)
-                .setCropShape(CropImageView.CropShape.RECTANGLE)
-                .start(getContext(), this);
+        String destinationFileName = "cropped_image_" + System.currentTimeMillis() + ".jpg";
+        Uri destinationUri = Uri.fromFile(new File(getContext().getCacheDir(), destinationFileName));
+
+        UCrop.of(uri, destinationUri)
+                .withAspectRatio(1, 1)
+                .withMaxResultSize(1000, 1000)
+                .withOptions(getCropOptions())
+                .start(getContext(), this, UCROP_REQUEST_CODE);
+
         binding.text.setVisibility(View.GONE);
         binding.heading.setVisibility(View.GONE);
         binding.copy.setVisibility(View.GONE);
+    }
+
+    private UCrop.Options getCropOptions() {
+        UCrop.Options options = new UCrop.Options();
+        options.setCompressionFormat(Bitmap.CompressFormat.JPEG);
+        options.setCompressionQuality(90);
+        options.setHideBottomControls(false);
+        options.setFreeStyleCropEnabled(true);
+
+        return options;
     }
 }
