@@ -28,6 +28,7 @@ import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
 
+import com.akshayAshokCode.textrecognition.R;
 import com.akshayAshokCode.textrecognition.databinding.FragmentRecognitionBinding;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.mlkit.vision.common.InputImage;
@@ -148,11 +149,11 @@ public class RecognitionFragment extends Fragment {
 
     // checking storage permissions
     private Boolean checkStoragePermission() {
-        if(Build.VERSION.SDK_INT > 32){
+        if (Build.VERSION.SDK_INT > 32) {
             return ContextCompat.checkSelfPermission(getContext(), Manifest.permission.READ_MEDIA_IMAGES) == (PackageManager.PERMISSION_GRANTED);
-        }else if(Build.VERSION.SDK_INT >= 30){
+        } else if (Build.VERSION.SDK_INT >= 30) {
             return ContextCompat.checkSelfPermission(getContext(), Manifest.permission.READ_EXTERNAL_STORAGE) == (PackageManager.PERMISSION_GRANTED);
-        }else {
+        } else {
             return ContextCompat.checkSelfPermission(getContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE) == (PackageManager.PERMISSION_GRANTED);
         }
     }
@@ -201,7 +202,7 @@ public class RecognitionFragment extends Fragment {
 
         try {
             startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
-        } catch (Exception e){
+        } catch (Exception e) {
             Log.e(TAG, "Camera error:" + e.getMessage());
             Snackbar.make(binding.lnGallery, "Unable to open camera", Snackbar.LENGTH_SHORT).show();
         }
@@ -299,6 +300,11 @@ public class RecognitionFragment extends Fragment {
         options.setCompressionQuality(90);
         options.setHideBottomControls(false);
         options.setFreeStyleCropEnabled(true);
+
+        // Edge-to-edge compatible colors
+        options.setStatusBarColor(getResources().getColor(android.R.color.transparent));
+        options.setToolbarColor(getResources().getColor(R.color.colorPrimary));
+        options.setActiveControlsWidgetColor(getResources().getColor(R.color.colorAccent));
 
         return options;
     }

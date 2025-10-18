@@ -6,6 +6,7 @@
     android:layout_height="match_parent"
     android:background="@drawable/background_gradient"
     android:orientation="vertical"
+    android:fitsSystemWindows="true"
     tools:context="com.akshayAshokCode.textrecognition.presentation.MainActivity">
 
     <com.google.android.material.tabs.TabLayout
