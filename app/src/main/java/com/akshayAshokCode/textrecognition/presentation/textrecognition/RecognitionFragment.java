@@ -49,7 +49,7 @@ public class RecognitionFragment extends Fragment {
     private ProgressDialog progressDialog;
     private static final String TAG = "RecognitionFragment";
     static final int REQUEST_IMAGE_CAPTURE = 301;
-    private AlphaAnimation buttonClick = new AlphaAnimation(1F, 0.5F);
+    private final AlphaAnimation buttonClick = new AlphaAnimation(1F, 0.5F);
     private static final int STORAGE_REQUEST = 200;
     private static final int CAMERA_REQUEST = 201;
     private static final int IMAGEPICK_GALLERY_REQUEST = 300;
@@ -58,7 +58,7 @@ public class RecognitionFragment extends Fragment {
     private FragmentRecognitionBinding binding;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         binding = FragmentRecognitionBinding.inflate(inflater);
@@ -109,9 +109,7 @@ public class RecognitionFragment extends Fragment {
         recognizer.process(image)
                 .addOnSuccessListener(this::processTextBlock)
                 .addOnFailureListener(
-                        e -> {
-                            Log.e(TAG, e.getMessage());
-                        });
+                        e -> Log.e(TAG, e.getMessage()));
     }
 
     private void processTextBlock(Text result) {
