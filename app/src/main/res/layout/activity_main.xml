@@ -16,7 +16,8 @@
         android:background="@drawable/card_view_gradient"
         app:tabIndicatorColor="@color/textColorForTabs"
         app:tabSelectedTextColor="@color/textColorForTabs"
-        app:tabTextColor="@color/textColorForTabs"/>
+        app:tabTextColor="@color/textColorForTabs"
+        app:tabIconTint="@color/textColorForTabs"/>
 
     <androidx.viewpager2.widget.ViewPager2
         android:id="@+id/pager"
