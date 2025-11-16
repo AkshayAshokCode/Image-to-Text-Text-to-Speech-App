@@ -1,12 +1,12 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdk 35
+    compileSdkVersion 36
 
     defaultConfig {
         applicationId "com.akshayAshokCode.textrecognition"
         minSdkVersion 21
-        targetSdkVersion 35
+        targetSdkVersion 36
         versionCode 7
         versionName "1.6.0"
 

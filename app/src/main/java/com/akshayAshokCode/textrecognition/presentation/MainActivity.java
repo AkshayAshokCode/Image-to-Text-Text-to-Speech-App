@@ -13,6 +13,7 @@ import androidx.core.view.WindowInsetsCompat;
 import androidx.fragment.app.FragmentManager;
 import androidx.viewpager2.widget.ViewPager2;
 
+import com.akshayAshokCode.textrecognition.R;
 import com.akshayAshokCode.textrecognition.databinding.ActivityMainBinding;
 import com.akshayAshokCode.textrecognition.presentation.adapter.FragmentAdapter;
 import com.google.android.material.tabs.TabLayout;
@@ -59,8 +60,12 @@ public class MainActivity extends AppCompatActivity {
         fragmentAdapter = new FragmentAdapter(fragmentManager, getLifecycle());
         binding.pager.setAdapter(fragmentAdapter);
 
-        binding.tabLayout.addTab(binding.tabLayout.newTab().setText("Recognize Text"));
-        binding.tabLayout.addTab(binding.tabLayout.newTab().setText("Text to Speech"));
+        binding.tabLayout.addTab(binding.tabLayout.newTab()
+                .setText("Listen")
+                .setIcon(R.drawable.volume_icon));
+        binding.tabLayout.addTab(binding.tabLayout.newTab()
+                .setText("Scanner")
+                .setIcon(R.drawable.camera_icon));
 
         binding.tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
