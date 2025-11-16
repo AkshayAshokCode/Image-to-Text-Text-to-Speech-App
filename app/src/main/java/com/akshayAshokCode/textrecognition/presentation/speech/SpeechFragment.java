@@ -58,7 +58,19 @@ public class SpeechFragment extends Fragment {
                 if (textToSpeech != null) {
                     textToSpeech.stop();
                 }
-                textToSpeech = new TextToSpeechManager().textToSpeech(getContext(), selectedLanguage);
+                textToSpeech = new TextToSpeechManager().textToSpeech(getContext(), selectedLanguage, new TextToSpeechManager.LanguageCallback() {
+                    @Override
+                    public void onLanguageNotSupported(String languageName) {
+                        getActivity().runOnUiThread(() -> {
+                            Snackbar.make(binding.talk, "Language Not Supported + $languageName", Snackbar.LENGTH_SHORT).show();
+                        });
+                        }
+
+                    @Override
+                    public void onLanguageSetSuccessfully(String languageName) {
+
+                    }
+                });
             }
 
             @Override
