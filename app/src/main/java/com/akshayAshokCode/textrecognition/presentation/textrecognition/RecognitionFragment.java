@@ -282,8 +282,8 @@ public class RecognitionFragment extends Fragment {
         Uri destinationUri = Uri.fromFile(new File(getContext().getCacheDir(), destinationFileName));
 
         UCrop.of(uri, destinationUri)
-                .withAspectRatio(1, 1)
-                .withMaxResultSize(1000, 1000)
+                .withAspectRatio(0, 0)
+                .withMaxResultSize(2000, 2000)
                 .withOptions(getCropOptions())
                 .start(getContext(), this, UCROP_REQUEST_CODE);
 
@@ -296,12 +296,13 @@ public class RecognitionFragment extends Fragment {
         UCrop.Options options = new UCrop.Options();
         options.setCompressionFormat(Bitmap.CompressFormat.JPEG);
         options.setCompressionQuality(90);
+        options.setMaxBitmapSize(2048);
         options.setHideBottomControls(false);
         options.setFreeStyleCropEnabled(true);
 
         // Edge-to-edge compatible colors
         options.setStatusBarColor(getResources().getColor(android.R.color.transparent));
-        options.setToolbarColor(getResources().getColor(R.color.colorPrimary));
+        options.setToolbarColor(getResources().getColor(android.R.color.transparent));
         options.setActiveControlsWidgetColor(getResources().getColor(R.color.colorAccent));
 
         return options;

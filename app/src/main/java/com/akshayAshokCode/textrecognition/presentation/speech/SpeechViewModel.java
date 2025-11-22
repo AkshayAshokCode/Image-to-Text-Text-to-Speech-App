@@ -41,7 +41,7 @@ public class SpeechViewModel extends ViewModel {
 
         for (Voice voice : availableVoices) {
             if (voice.getLocale().getLanguage().equals(locale.getLanguage())) {
-                String displayName = "voice " + voiceCounter;
+                String displayName = "Voice " + voiceCounter;
                 voiceList.add(new VoiceType(displayName, voice));
                 voiceCounter++;
             }

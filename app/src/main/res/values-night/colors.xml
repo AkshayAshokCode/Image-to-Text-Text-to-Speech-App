@@ -4,20 +4,22 @@
     <color name="colorPrimaryReverse">#ffffff</color>
     <color name="colorPrimaryDark">#000000</color>
     <color name="colorAccent">#03DAC5</color>
-    <color name="buttonBlue">@android:color/holo_blue_light</color>
+    <color name="buttonBlue">@android:color/holo_blue_dark</color>
     <color name="textColor">#FF202020</color>
+    <color name="buttonTextColor">@android:color/white</color>
+    <color name="buttonTextColorDisabled">#80FFFFFF</color>
     <!-- colors for tabs-->
     <color name="textColorForTabs">#ffffff</color>
 
-    <color name="background_start_color">#000000</color>
-    <color name="background_center_color">#151515</color>
-    <color name="background_end_color">#2C2A2A</color>
+    <color name="background_start_color">#0f172a</color>
+    <color name="background_center_color">#1e293b</color>
+    <color name="background_end_color">#334155</color>
 
-    <color name="card_view_start_color">#000000</color>
-    <color name="card_view_center_color">#151515</color>
-    <color name="card_view_end_color">#2C2A2A</color>
+    <color name="card_view_start_color">#1e293b</color>
+    <color name="card_view_center_color">#334155</color>
+    <color name="card_view_end_color">#475569</color>
 
     <color name="seekbar_low">#FFFF00</color>
-    <color name="seekbar_mid">@android:color/holo_blue_light</color>
+    <color name="seekbar_mid">@android:color/holo_blue_dark</color>
     <color name="seekbar_high">#FF0000</color>
 </resources>

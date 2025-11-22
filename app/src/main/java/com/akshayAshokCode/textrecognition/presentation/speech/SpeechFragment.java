@@ -51,7 +51,8 @@ public class SpeechFragment extends Fragment {
 
         viewModel.getVoices().observe(getViewLifecycleOwner(), voiceTypes -> {
             if (!voiceTypes.isEmpty()) {
-                voiceAdapter = new ArrayAdapter<>(getContext(), R.layout.support_simple_spinner_dropdown_item, voiceTypes);
+                voiceAdapter = new ArrayAdapter<>(getContext(), R.layout.custom_spinner_item, voiceTypes);
+                voiceAdapter.setDropDownViewResource(R.layout.custom_spinner_dropdown_item);
                 binding.voiceSpinner.setAdapter(voiceAdapter);
                 binding.voiceSpinner.setVisibility(View.VISIBLE);
             } else {
@@ -63,7 +64,8 @@ public class SpeechFragment extends Fragment {
         viewModel.getLanguages().observe(getViewLifecycleOwner(), languageTypes -> {
             for (int i = 0; i < languageTypes.size(); i++) {
                 LanguageType[] languageList = languageTypes.toArray(new LanguageType[i]);
-                adapter = new ArrayAdapter<>(getContext(), R.layout.support_simple_spinner_dropdown_item, languageList);
+                adapter = new ArrayAdapter<>(getContext(), R.layout.custom_spinner_item, languageList);
+                adapter.setDropDownViewResource(R.layout.custom_spinner_dropdown_item);
                 binding.spinner.setAdapter(adapter);
             }
         });
@@ -117,8 +119,9 @@ public class SpeechFragment extends Fragment {
             if (textToSpeech != null) {
                 if (textToSpeech.isSpeaking()) {
                     textToSpeech.stop();
-                } else {
-                    Snackbar.make(binding.talk, "Not Talking", Snackbar.LENGTH_SHORT).show();
+                }
+                if(binding.audioVisualizer != null){
+                    binding.audioVisualizer.updateVisualizer(null);
                 }
             }
         });
@@ -225,13 +228,7 @@ public class SpeechFragment extends Fragment {
             @Override
             public void onAudioAvailable(String utteranceId, byte[] audio) {
                 super.onAudioAvailable(utteranceId, audio);
-                getActivity().runOnUiThread(new Runnable() {
-
-                    @Override
-                    public void run() {
-                        binding.audioVisualizer.updateVisualizer(audio);
-                    }
-                });
+                getActivity().runOnUiThread(() -> binding.audioVisualizer.updateVisualizer(audio));
             }
         });
 

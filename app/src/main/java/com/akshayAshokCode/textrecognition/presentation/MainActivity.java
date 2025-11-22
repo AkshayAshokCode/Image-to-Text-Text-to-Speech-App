@@ -7,6 +7,7 @@ import android.util.Log;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
@@ -44,6 +45,9 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        // Force dark theme
+        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+
         EdgeToEdge.enable(this);
 
         binding = ActivityMainBinding.inflate(getLayoutInflater());
@@ -61,7 +65,7 @@ public class MainActivity extends AppCompatActivity {
         binding.pager.setAdapter(fragmentAdapter);
 
         binding.tabLayout.addTab(binding.tabLayout.newTab()
-                .setText("Listen")
+                .setText("Talk")
                 .setIcon(R.drawable.volume_icon));
         binding.tabLayout.addTab(binding.tabLayout.newTab()
                 .setText("Scanner")
