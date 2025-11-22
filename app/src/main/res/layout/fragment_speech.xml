@@ -98,7 +98,8 @@
                                 android:id="@+id/spinner"
                                 android:layout_width="200dp"
                                 android:layout_height="wrap_content"
-                                android:layout_gravity="start" />
+                                android:layout_gravity="start"
+                                android:foregroundTint="@android:color/white" />
 
                             <TextView
                                 android:layout_width="wrap_content"
@@ -111,7 +112,8 @@
                                 android:id="@+id/voice_spinner"
                                 android:layout_width="200dp"
                                 android:layout_height="wrap_content"
-                                android:layout_gravity="start" />
+                                android:layout_gravity="start"
+                                android:foregroundTint="@android:color/white" />
                         </LinearLayout>
 
                         <LinearLayout
@@ -129,17 +131,21 @@
                                 android:layout_marginBottom="10dp"
                                 android:background="@drawable/button"
                                 android:text="@string/talk"
-                                android:textColor="@android:color/white" />
+                                android:textColor="@color/button_text_selector"
+                                android:clickable="true"
+                                android:focusable="true"/>
 
                             <androidx.appcompat.widget.AppCompatButton
                                 android:id="@+id/stop"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_gravity="center_horizontal"
-                                android:background="@drawable/button"
+                                android:background="@drawable/button_stop"
                                 android:backgroundTint="@android:color/holo_red_light"
                                 android:text="@string/stop"
-                                android:textColor="@android:color/white" />
+                                android:textColor="@color/button_text_selector"
+                                android:clickable="true"
+                                android:focusable="true" />
                         </LinearLayout>
                     </LinearLayout>
 
