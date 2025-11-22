@@ -14,4 +14,5 @@
     <string name="accent">Accent</string>
     <string name="talk">Talk!</string>
     <string name="stop">Stop!</string>
+    <string name="voice">Voice</string>
 </resources>

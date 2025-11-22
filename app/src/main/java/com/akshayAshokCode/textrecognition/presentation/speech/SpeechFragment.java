@@ -6,6 +6,7 @@ import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.speech.tts.TextToSpeech;
 import android.speech.tts.UtteranceProgressListener;
+import android.speech.tts.Voice;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,24 +23,42 @@ import androidx.lifecycle.ViewModelProvider;
 import com.akshayAshokCode.textrecognition.R;
 import com.akshayAshokCode.textrecognition.databinding.FragmentSpeechBinding;
 import com.akshayAshokCode.textrecognition.model.LanguageType;
+import com.akshayAshokCode.textrecognition.model.VoiceType;
 import com.akshayAshokCode.textrecognition.util.PitchAndSpeedManager;
 import com.akshayAshokCode.textrecognition.util.TextToSpeechManager;
 import com.google.android.material.snackbar.Snackbar;
 
 import java.util.Locale;
+import java.util.Set;
 
 public class SpeechFragment extends Fragment {
     private TextToSpeech textToSpeech;
     private FragmentSpeechBinding binding;
+    private SpeechViewModel viewModel;
     private static final String TAG = "SpeechFragment";
     private ArrayAdapter<LanguageType> adapter;
     private static final int AUDIO_REQUEST = 202;
     private String[] audioPermission;
+    private ArrayAdapter<VoiceType> voiceAdapter;
+    private Voice selectedVoice;
+
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         binding = FragmentSpeechBinding.inflate(inflater);
+        viewModel = new ViewModelProvider(this).get(SpeechViewModel.class);
+
+        viewModel.getVoices().observe(getViewLifecycleOwner(), voiceTypes -> {
+            if (!voiceTypes.isEmpty()) {
+                voiceAdapter = new ArrayAdapter<>(getContext(), R.layout.support_simple_spinner_dropdown_item, voiceTypes);
+                binding.voiceSpinner.setAdapter(voiceAdapter);
+                binding.voiceSpinner.setVisibility(View.VISIBLE);
+            } else {
+                binding.voiceSpinner.setVisibility(View.GONE);
+            }
+        });
+
         SpeechViewModel viewModel = new ViewModelProvider(this).get(SpeechViewModel.class);
         viewModel.getLanguages().observe(getViewLifecycleOwner(), languageTypes -> {
             for (int i = 0; i < languageTypes.size(); i++) {
@@ -62,12 +81,13 @@ public class SpeechFragment extends Fragment {
                     @Override
                     public void onLanguageNotSupported(String languageName) {
                         getActivity().runOnUiThread(() -> {
-                            Snackbar.make(binding.talk, "Language Not Supported + $languageName", Snackbar.LENGTH_SHORT).show();
+                            Snackbar.make(binding.talk, "Language Not Supported:" + languageName, Snackbar.LENGTH_SHORT).show();
                         });
-                        }
+                    }
 
                     @Override
                     public void onLanguageSetSuccessfully(String languageName) {
+                        loadVVoicesForLanguage(selectedLanguage);
 
                     }
                 });
@@ -150,6 +170,23 @@ public class SpeechFragment extends Fragment {
             }
         });
 
+        binding.voiceSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int position, long l) {
+                VoiceType selectedVoiceType = voiceAdapter.getItem(position);
+                selectedVoice = selectedVoiceType.getVoice();
+                if (textToSpeech != null) {
+                    textToSpeech.setVoice(selectedVoice);
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
+
         return binding.getRoot();
     }
 
@@ -164,37 +201,19 @@ public class SpeechFragment extends Fragment {
         textToSpeech.setOnUtteranceProgressListener(new UtteranceProgressListener() {
             @Override
             public void onStart(String s) {
-                getActivity().runOnUiThread(new Runnable() {
-
-                    @Override
-                    public void run() {
-                        binding.audioVisualizer.setVisibility(View.VISIBLE);
-                        binding.audioVisualizer.requestFocus();
-                    }
+                getActivity().runOnUiThread(() -> {
+                    binding.audioVisualizer.requestFocus();
                 });
             }
 
             @Override
             public void onStop(String utteranceId, boolean interrupted) {
                 super.onStop(utteranceId, interrupted);
-                getActivity().runOnUiThread(new Runnable() {
-
-                    @Override
-                    public void run() {
-                        binding.audioVisualizer.setVisibility(View.GONE);
-                    }
-                });
             }
 
             @Override
             public void onDone(String s) {
-                getActivity().runOnUiThread(new Runnable() {
-
-                    @Override
-                    public void run() {
-                        binding.audioVisualizer.setVisibility(View.GONE);
-                    }
-                });
+                getActivity().runOnUiThread(() -> binding.audioVisualizer.updateVisualizer(null));
 
             }
 
@@ -250,6 +269,13 @@ public class SpeechFragment extends Fragment {
 
     private float getSpeed() {
         return new PitchAndSpeedManager().getSpeed(binding.speed);
+    }
+
+    private void loadVVoicesForLanguage(Locale locale) {
+        if (textToSpeech != null) {
+            Set<Voice> voices = textToSpeech.getVoices();
+            viewModel.loadVoicesForLanguage(voices, locale);
+        }
     }
 
     @Override
