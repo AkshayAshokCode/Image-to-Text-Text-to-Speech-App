@@ -56,11 +56,14 @@ Download now and experience the power of 30+ language text-to-speech technology!
 <br/>
 
 ## Screenshots :
-<a><img src="https://github.com/AkshayAshokCode/Image-to-Text-Text-to-Speech-App/blob/master/screenshots/screenshot1.jpg" height="500"></a> &nbsp;&nbsp;&nbsp;&nbsp;
-<a><img src="https://github.com/AkshayAshokCode/Image-to-Text-Text-to-Speech-App/blob/master/screenshots/screenshot2.jpg" height="500"></a> &nbsp;&nbsp;&nbsp;&nbsp;
-<a><img src="https://github.com/AkshayAshokCode/Image-to-Text-Text-to-Speech-App/blob/master/screenshots/screenshot3.jpg" height="500"></a>
-<a><img src="https://github.com/AkshayAshokCode/Image-to-Text-Text-to-Speech-App/blob/master/screenshots/screenshot4.jpg" height="500"></a> &nbsp;&nbsp;&nbsp;&nbsp;
-<a><img src="https://github.com/AkshayAshokCode/Image-to-Text-Text-to-Speech-App/blob/master/screenshots/screenshot5.jpg" height="500"></a> &nbsp;&nbsp;&nbsp;&nbsp;
-<a><img src="https://github.com/AkshayAshokCode/Image-to-Text-Text-to-Speech-App/blob/master/screenshots/screenshot6.jpg" height="500"></a>
+<a><img src="https://github.com/user-attachments/assets/956daa4f-faa9-460d-8c2c-14ed097207ed" height="500"></a> &nbsp;&nbsp;&nbsp;&nbsp;
+<a><img src="https://github.com/user-attachments/assets/628bb47b-1343-40da-842b-382362ade1ab" height="500"></a> &nbsp;&nbsp;&nbsp;&nbsp;
+<a><img src="https://github.com/user-attachments/assets/9735ea2a-15f7-4abb-8f61-c3a61a6e9875" height="500"></a>
+<br/>
+<a><img src="https://github.com/user-attachments/assets/aad41fee-a5f9-43aa-9601-ea6db6f75b0e" height="500"></a> &nbsp;&nbsp;&nbsp;&nbsp;
+<a><img src="https://github.com/user-attachments/assets/ee03f3cc-b3f2-4ec3-aed9-a06d37f05934" height="500"></a> &nbsp;&nbsp;&nbsp;&nbsp;
+<a><img src="https://github.com/user-attachments/assets/878e2f06-63de-49ec-8cef-54ed0bd19cce" height="500"></a>
+<br/>
+<a><img src="https://github.com/user-attachments/assets/176b026c-715a-4250-9d3b-f5c38bd854f5" height="500"></a>
 
 *You can Install the latest Image to Text to Speech app from here 👉* [<img align=center src="https://www.logo.wine/a/logo/Google_Play/Google_Play-Badge-Logo.wine.svg" width="200" />](https://play.google.com/store/apps/details?id=com.akshayAshokCode.textrecognition)
