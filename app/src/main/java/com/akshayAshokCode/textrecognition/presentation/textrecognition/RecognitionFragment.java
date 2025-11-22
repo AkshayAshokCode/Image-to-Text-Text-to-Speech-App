@@ -85,6 +85,7 @@ public class RecognitionFragment extends Fragment {
         });
         binding.lnDetect.setOnClickListener(v12 -> {
             if (binding.imageview.getVisibility() == View.VISIBLE) {
+                binding.copy.setFocusableInTouchMode(true);
                 v12.startAnimation(buttonClick);
                 progressDialog.setMessage("Processing Image...");
                 progressDialog.show();
@@ -125,6 +126,8 @@ public class RecognitionFragment extends Fragment {
                 binding.text.append(blockText + "\n");
             }
             binding.copy.requestFocus();
+            binding.copy.clearFocus();
+            binding.copy.setFocusableInTouchMode(false);
         } else
             Snackbar.make(binding.lnGallery, "No text", Snackbar.LENGTH_SHORT).show();
     }

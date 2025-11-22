@@ -192,7 +192,8 @@
                 android:focusableInTouchMode="true"
                 android:padding="15dp"
                 android:text="@string/copy_text"
-                android:textColor="@android:color/white"
+                android:textColor="@color/button_text_selector"
+                android:clickable="true"
                 android:visibility="gone" />
         </LinearLayout>
             </androidx.cardview.widget.CardView>
