@@ -12,9 +12,9 @@ public class LanguageRepository {
         LanguageType[] languageTypes = new LanguageType[30];
         languageTypes[0] = new LanguageType("American English", Locale.US);
         languageTypes[1] = new LanguageType("British English", Locale.UK);
-        languageTypes[2] = new LanguageType("Chinese (Mandarian)", Locale.CHINA);
+        languageTypes[2] = new LanguageType("Chinese (Mandarin)", Locale.CHINA);
         languageTypes[3] = new LanguageType("Spanish", new Locale("es", "ES"));
-        languageTypes[4] = new LanguageType("HIndi", new Locale("hi", "IN"));
+        languageTypes[4] = new LanguageType("Hindi", new Locale("hi", "IN"));
         languageTypes[5] = new LanguageType("Arabic", new Locale("ar", "SA"));
         languageTypes[6] = new LanguageType("Portuguese", new Locale("pt", "BR"));
         languageTypes[7] = new LanguageType("Russian", new Locale("ru", "RU"));

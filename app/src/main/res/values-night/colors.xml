@@ -1,25 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#FF202020</color>
-    <color name="colorPrimaryReverse">#ffffff</color>
-    <color name="colorPrimaryDark">#000000</color>
-    <color name="colorAccent">#03DAC5</color>
-    <color name="buttonBlue">@android:color/holo_blue_dark</color>
-    <color name="textColor">#FF202020</color>
-    <color name="buttonTextColor">@android:color/white</color>
+    <!-- Identical to values/colors.xml — app forces dark mode -->
+    <color name="bg_primary">#0A0F1E</color>
+    <color name="bg_surface">#111827</color>
+    <color name="bg_elevated">#1A2740</color>
+    <color name="stroke_color">#1F2D45</color>
+    <color name="accent_primary">#4F89FF</color>
+    <color name="icon_tint">#93C5FD</color>
+    <color name="gradient_start">#3B82F6</color>
+    <color name="gradient_end">#6D28D9</color>
+    <color name="accent_stop">#EF4444</color>
+    <color name="text_primary">#F1F5F9</color>
+    <color name="text_secondary">#64748B</color>
+    <color name="text_hint">#2D3F57</color>
+    <color name="seekbar_low">#10B981</color>
+    <color name="seekbar_mid">#4F89FF</color>
+    <color name="seekbar_high">#EF4444</color>
+    <color name="colorPrimary">#4F89FF</color>
+    <color name="colorPrimaryReverse">#F1F5F9</color>
+    <color name="colorPrimaryDark">#0A0F1E</color>
+    <color name="colorAccent">#14B8A6</color>
+    <color name="buttonBlue">#4F89FF</color>
+    <color name="buttonTextColor">#FFFFFF</color>
     <color name="buttonTextColorDisabled">#80FFFFFF</color>
-    <!-- colors for tabs-->
-    <color name="textColorForTabs">#ffffff</color>
-
-    <color name="background_start_color">#0f172a</color>
-    <color name="background_center_color">#1e293b</color>
-    <color name="background_end_color">#334155</color>
-
-    <color name="card_view_start_color">#1e293b</color>
-    <color name="card_view_center_color">#334155</color>
-    <color name="card_view_end_color">#475569</color>
-
-    <color name="seekbar_low">#FFFF00</color>
-    <color name="seekbar_mid">@android:color/holo_blue_dark</color>
-    <color name="seekbar_high">#FF0000</color>
+    <color name="textColorForTabs">#F1F5F9</color>
+    <color name="background_start_color">#0A0F1E</color>
+    <color name="background_center_color">#0A0F1E</color>
+    <color name="background_end_color">#0A0F1E</color>
+    <color name="card_view_start_color">#111827</color>
+    <color name="card_view_center_color">#111827</color>
+    <color name="card_view_end_color">#111827</color>
 </resources>

@@ -6,7 +6,7 @@ android {
 
     defaultConfig {
         applicationId "com.akshayAshokCode.textrecognition"
-        minSdkVersion 21
+        minSdkVersion 24
         targetSdkVersion 36
         versionCode 8
         versionName "2.0.0"
@@ -49,7 +49,8 @@ dependencies {
     testImplementation 'junit:junit:4.13.2'
     implementation 'com.google.android.material:material:1.13.0'
     implementation 'com.google.android.gms:play-services-mlkit-text-recognition:19.0.1'
-    implementation 'com.github.yalantis:ucrop:2.2.8'
+    implementation 'io.github.akshayashokcode:imagepicker:0.1.0'
+    implementation 'io.github.akshayashokcode:imagecropper:0.1.0'
 
     // This is not backward compatible anymore
     //implementation 'com.google.android.play:core:1.10.3'
