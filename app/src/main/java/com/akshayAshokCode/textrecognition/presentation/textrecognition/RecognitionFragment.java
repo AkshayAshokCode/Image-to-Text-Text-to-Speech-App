@@ -21,7 +21,13 @@ import androidx.fragment.app.Fragment;
 
 import com.akshayAshokCode.textrecognition.R;
 import com.akshayAshokCode.textrecognition.databinding.FragmentRecognitionBinding;
+import com.akshayashokcode.imagecropper.AspectRatio;
+import com.akshayashokcode.imagecropper.CropShape;
+import com.akshayashokcode.imagecropper.CropperOptions;
 import com.akshayashokcode.imagecropper.MediaKitCropProvider;
+import com.akshayashokcode.imagecropper.OutputFormat;
+
+import java.util.Arrays;
 import com.akshayashokcode.imagepicker.builder.ImagePickerBuilder;
 import com.akshayashokcode.imagepicker.entrypoint.ImagePicker;
 import com.akshayashokcode.imagepicker.model.ImagePickerResult;
@@ -49,7 +55,20 @@ public class RecognitionFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         imagePicker = ImagePicker.INSTANCE.with(requireContext(), this)
-                .crop(new MediaKitCropProvider())
+                .crop(new MediaKitCropProvider(
+                        new CropperOptions(
+                            /* aspectRatios     */ Arrays.asList(AspectRatio.Free.INSTANCE, AspectRatio.Square.INSTANCE, AspectRatio.Companion.getSixteenNine()),
+                            /* lockAspectRatio  */ false,
+                            /* cropShape        */ CropShape.Rectangle.INSTANCE,
+                            /* showRotateButtons*/ true,
+                            /* showFlipButtons  */ true,
+                            /* outputFormat     */ new OutputFormat.JPEG(90),
+                            /* maxOutputWidth   */ 2048,
+                            /* maxOutputHeight  */ 2048,
+                            /* minOutputWidth   */ 100,
+                            /* minOutputHeight  */ 100
+                        )
+                ))
                 .onResult(result -> {
                     if (result instanceof ImagePickerResult.Success) {
                         loadImage(((ImagePickerResult.Success) result).getUri());
