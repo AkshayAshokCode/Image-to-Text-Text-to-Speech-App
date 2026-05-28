@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/background_gradient"
+    android:background="@color/bg_primary"
     android:orientation="vertical"
     android:fitsSystemWindows="true"
     tools:context="com.akshayAshokCode.textrecognition.presentation.MainActivity">
@@ -13,16 +13,21 @@
         android:id="@+id/tab_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/card_view_gradient"
-        app:tabIndicatorColor="@color/textColorForTabs"
-        app:tabSelectedTextColor="@color/textColorForTabs"
-        app:tabTextColor="@color/textColorForTabs"
-        app:tabIconTint="@color/textColorForTabs"/>
+        android:background="@color/bg_surface"
+        android:elevation="0dp"
+        app:tabIndicatorColor="@color/accent_primary"
+        app:tabIndicatorHeight="3dp"
+        app:tabIndicatorFullWidth="false"
+        app:tabSelectedTextColor="@color/text_primary"
+        app:tabTextColor="@color/text_secondary"
+        app:tabIconTint="@color/text_secondary"
+        app:tabGravity="fill"
+        app:tabMode="fixed"
+        app:tabTextAppearance="@style/TabTextAppearance" />
 
     <androidx.viewpager2.widget.ViewPager2
         android:id="@+id/pager"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
-
 
 </LinearLayout>

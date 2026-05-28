@@ -1,7 +1,5 @@
 package com.akshayAshokCode.textrecognition.presentation.speech;
 
-import android.Manifest;
-import android.content.pm.PackageManager;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.speech.tts.TextToSpeech;
@@ -37,8 +35,6 @@ public class SpeechFragment extends Fragment {
     private SpeechViewModel viewModel;
     private static final String TAG = "SpeechFragment";
     private ArrayAdapter<LanguageType> adapter;
-    private static final int AUDIO_REQUEST = 202;
-    private String[] audioPermission;
     private ArrayAdapter<VoiceType> voiceAdapter;
     private Voice selectedVoice;
 
@@ -60,7 +56,6 @@ public class SpeechFragment extends Fragment {
             }
         });
 
-        SpeechViewModel viewModel = new ViewModelProvider(this).get(SpeechViewModel.class);
         viewModel.getLanguages().observe(getViewLifecycleOwner(), languageTypes -> {
             for (int i = 0; i < languageTypes.size(); i++) {
                 LanguageType[] languageList = languageTypes.toArray(new LanguageType[i]);
@@ -69,8 +64,6 @@ public class SpeechFragment extends Fragment {
                 binding.spinner.setAdapter(adapter);
             }
         });
-        audioPermission = new String[]{Manifest.permission.RECORD_AUDIO};
-
         binding.spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
@@ -78,6 +71,7 @@ public class SpeechFragment extends Fragment {
                 final Locale selectedLanguage = languageTypeSelected.getLocale();
                 if (textToSpeech != null) {
                     textToSpeech.stop();
+                    textToSpeech.shutdown();
                 }
                 textToSpeech = new TextToSpeechManager().textToSpeech(getContext(), selectedLanguage, new TextToSpeechManager.LanguageCallback() {
                     @Override
@@ -104,15 +98,10 @@ public class SpeechFragment extends Fragment {
             if (binding.text.getText().toString().equals("")) {
                 Snackbar.make(binding.talk, "No Text Entered", Snackbar.LENGTH_SHORT).show();
             } else {
-                if (!checkAudioPermission()) {
-                    requestAudioPermission();
-                } else {
-                    InputMethodManager inputMethodManager = (InputMethodManager) requireActivity().getSystemService(getActivity().INPUT_METHOD_SERVICE);
-                    inputMethodManager.hideSoftInputFromWindow(v1.getApplicationWindowToken(), 0);
-                    speak();
-                }
+                InputMethodManager inputMethodManager = (InputMethodManager) requireActivity().getSystemService(getActivity().INPUT_METHOD_SERVICE);
+                inputMethodManager.hideSoftInputFromWindow(v1.getApplicationWindowToken(), 0);
+                speak();
             }
-
         });
 
         binding.stop.setOnClickListener(view -> {
@@ -131,21 +120,17 @@ public class SpeechFragment extends Fragment {
                 int color = viewModel.getColor(i);
                 seekBar.getProgressDrawable().setColorFilter(ContextCompat.getColor(getContext(), color), PorterDuff.Mode.SRC_IN);
                 seekBar.getThumb().setColorFilter(ContextCompat.getColor(getContext(), color), PorterDuff.Mode.SRC_IN);
-                if (textToSpeech != null) {
-                    if (textToSpeech.isSpeaking()) {
-                        speak();
-                    }
-                }
             }
 
             @Override
             public void onStartTrackingTouch(SeekBar seekBar) {
-
             }
 
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
-
+                if (textToSpeech != null && textToSpeech.isSpeaking()) {
+                    speak();
+                }
             }
         });
         binding.speed.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
@@ -154,22 +139,17 @@ public class SpeechFragment extends Fragment {
                 int color = viewModel.getColor(i);
                 seekBar.getProgressDrawable().setColorFilter(ContextCompat.getColor(getContext(), color), PorterDuff.Mode.SRC_IN);
                 seekBar.getThumb().setColorFilter(ContextCompat.getColor(getContext(), color), PorterDuff.Mode.SRC_IN);
-                if (textToSpeech != null) {
-                    if (textToSpeech.isSpeaking()) {
-                        speak();
-                    }
-                }
-
             }
 
             @Override
             public void onStartTrackingTouch(SeekBar seekBar) {
-
             }
 
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
-
+                if (textToSpeech != null && textToSpeech.isSpeaking()) {
+                    speak();
+                }
             }
         });
 
@@ -235,30 +215,6 @@ public class SpeechFragment extends Fragment {
 
         textToSpeech.speak(text, TextToSpeech.QUEUE_FLUSH, null, TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID);
     }
-
-    private Boolean checkAudioPermission() {
-        return ContextCompat.checkSelfPermission(getContext(), Manifest.permission.RECORD_AUDIO) == (PackageManager.PERMISSION_GRANTED);
-    }
-
-    private void requestAudioPermission() {
-        requestPermissions(audioPermission, AUDIO_REQUEST);
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (requestCode == AUDIO_REQUEST) {
-            if (grantResults.length > 0) {
-                boolean audioAccepted = grantResults[0] == PackageManager.PERMISSION_GRANTED;
-                if (audioAccepted) {
-                    speak();
-                } else {
-                    Snackbar.make(binding.talk, "Please enable record audio permissions", Snackbar.LENGTH_SHORT).show();
-                }
-            }
-        }
-    }
-
 
     private float getPitch() {
         return new PitchAndSpeedManager().getPitch(binding.pitch);
